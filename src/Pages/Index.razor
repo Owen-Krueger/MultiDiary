@@ -1,0 +1,31 @@
+﻿@page "/"
+@inject StateContainer stateContainer;
+@inject IDiaryService diaryService;
+
+@*@if (stateContainer.Diaries != null)
+{
+    @foreach (var entry in stateContainer.Diaries.Entries)
+    {
+        <DiaryEntry Date="entry.Key" Sections="entry.Value.DiarySections" />
+    }
+}
+
+<button @onclick="AddEntry">Add diary entry</button>*@
+
+@if (stateContainer.Diaries != null)
+{
+    <Calendar Dates="stateContainer.Diaries.Entries.Keys" />
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await diaryService.GetDiariesAsync();
+    }
+
+    private async Task AddEntry()
+    {
+        var date = DateOnly.FromDateTime(DateTime.Today);
+        await diaryService.UpsertSection(date, new DiarySection(), true);
+    }
+}

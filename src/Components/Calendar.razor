@@ -1,0 +1,18 @@
+﻿@inject StateContainer stateContainer
+
+<MudDatePicker
+    PickerVariant="PickerVariant.Static"
+    Date="@DateTime.Today"
+    AdditionalDateClassesFunc="CheckDate"
+/>
+
+@code {
+    [Parameter]
+    public IEnumerable<DateOnly> Dates { get; set; }
+
+    private string CheckDate(DateTime date)
+    {
+        // compare only the date portion to find a match
+        return Dates.Contains(DateOnly.FromDateTime(date.Date)) ? "special-day" : string.Empty;
+    }
+}
