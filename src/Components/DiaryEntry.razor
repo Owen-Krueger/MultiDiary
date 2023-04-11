@@ -27,7 +27,11 @@
 
     private void AddSection()
     {
-        var sectionId = Sections.Max(x => x.SectionId) + 1;
+        int sectionId = 1;
+        if (Sections.Any())
+        {
+            sectionId = Sections.Max(x => x.SectionId) + 1;
+        }
         Sections.Add(new DiarySection(sectionId));
     }
 }

@@ -1,18 +1,41 @@
-﻿@inject StateContainer stateContainer
+﻿@implements IDisposable
+@inject StateContainer StateContainer
 
 <MudDatePicker
     PickerVariant="PickerVariant.Static"
-    Date="@DateTime.Today"
     AdditionalDateClassesFunc="CheckDate"
+    @bind-Date="selectedDateTime"
 />
 
 @code {
     [Parameter]
     public IEnumerable<DateOnly> Dates { get; set; }
 
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    private DateTime? selectedDateTime
+    {
+        get
+        {
+            return StateContainer.SelectedDate.ToDateTime(TimeOnly.MinValue);
+        }
+        set
+        {
+            StateContainer.SelectedDate = DateOnly.FromDateTime(value ?? DateTime.Today);
+        }
+    }
+
     private string CheckDate(DateTime date)
     {
-        // compare only the date portion to find a match
-        return Dates.Contains(DateOnly.FromDateTime(date.Date)) ? "special-day" : string.Empty;
+        return Dates.Contains(DateOnly.FromDateTime(date)) ? "selected-day" : string.Empty;
+    }
+
+
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

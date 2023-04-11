@@ -1,31 +1,22 @@
 ﻿@page "/"
-@inject StateContainer stateContainer;
-@inject IDiaryService diaryService;
+@implements IDisposable
+@inject StateContainer StateContainer
+@inject IDiaryService DiaryService
 
-@*@if (stateContainer.Diaries != null)
+@if (StateContainer.Diaries != null)
 {
-    @foreach (var entry in stateContainer.Diaries.Entries)
-    {
-        <DiaryEntry Date="entry.Key" Sections="entry.Value.DiarySections" />
-    }
-}
-
-<button @onclick="AddEntry">Add diary entry</button>*@
-
-@if (stateContainer.Diaries != null)
-{
-    <Calendar Dates="stateContainer.Diaries.Entries.Keys" />
+    <DiaryView Diaries="StateContainer.Diaries" />
 }
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await diaryService.GetDiariesAsync();
+        StateContainer.OnChange += StateHasChanged;
+        await DiaryService.GetDiariesAsync();
     }
 
-    private async Task AddEntry()
+    public void Dispose()
     {
-        var date = DateOnly.FromDateTime(DateTime.Today);
-        await diaryService.UpsertSection(date, new DiarySection(), true);
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

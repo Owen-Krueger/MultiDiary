@@ -66,6 +66,7 @@ namespace MultiDiary.Services
         {
             var filePath = GetFilePath();
             var diaries = stateContainer.Diaries ?? new Diaries();
+            diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             diaries.Metadata.LastUpdated= DateTime.UtcNow;
 
             await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));

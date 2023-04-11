@@ -1,0 +1,22 @@
+﻿@implements IDisposable
+@inject StateContainer StateContainer
+
+<Calendar Dates="Diaries.Entries.Keys" />
+<DiaryEntry Date="StateContainer.SelectedDate" Sections="SelectedDiarySections"/>
+
+@code {
+    [Parameter]
+    public Diaries Diaries { get; set; }
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    private List<DiarySection> SelectedDiarySections => Diaries.Entries.SingleOrDefault(x => x.Key == StateContainer.SelectedDate).Value?.DiarySections ?? new List<DiarySection>();
+
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+}

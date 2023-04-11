@@ -53,6 +53,18 @@ namespace MultiDiary.Services
             }
         }
 
+        private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+
+        public DateOnly SelectedDate
+        {
+            get => selectedDate;
+            set
+            {
+                selectedDate = value;
+                NotifyStateChanged();
+            }
+        }
+
         public bool ShouldShowOverlay => selectedOverlay != SelectedOverlay.None;
 
         public event Action OnChange;
