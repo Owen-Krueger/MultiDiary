@@ -14,6 +14,11 @@
               T="string"
               ValueChanged="OnBodyUpdatedAsync"
               Lines="5" />
+<MudButton Variant="Variant.Filled"
+           OnClick="RemoveSectionAsync"
+           Color="Color.Primary">
+    Delete Section
+</MudButton>
 
 @code {
     [Parameter]
@@ -45,5 +50,10 @@
     {
         DiarySection.Body = body;
         await diaryService.UpsertSection(Date, DiarySection, false);
+    }
+
+    protected async Task RemoveSectionAsync()
+    {
+        await diaryService.RemoveDiarySectionAsync(Date, DiarySection.SectionId);
     }
 }

@@ -1,14 +1,18 @@
-﻿@implements IDisposable
-@inject StateContainer StateContainer
-
-<MudStack>
-    @foreach(var section in Sections)
-    {
-        <DiarySectionEdit Date="Date" DiarySection="section" />
-    }
+﻿<MudStack>
+    <MudExpansionPanels MultiExpansion="true">
+        @foreach(var section in Sections)
+        {
+            <MudExpansionPanel
+                Text="@(section.Title)"
+                IsInitiallyExpanded="ShouldExpandPanel(section)"
+            >
+                <DiarySectionEdit Date="Date" DiarySection="section" />
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
     <MudButton
         Variant="Variant.Filled"
-        @onclick="AddSection"
+        OnClick="AddSection"
         EndIcon="@Icons.Material.Filled.Add"
         Color="Color.Primary"
     >
@@ -17,13 +21,10 @@
 </MudStack>
 
 @code {
-    protected override void OnInitialized()
-    {
-        StateContainer.OnChange += StateHasChanged;
-    }
-
-    private DateOnly Date => StateContainer.SelectedDate;
-    private List<DiarySection> Sections => StateContainer.Diaries.Entries.SingleOrDefault(x => x.Key == Date).Value?.DiarySections ?? new List<DiarySection>();
+    [Parameter]
+    public DateOnly Date { get; set; }
+    [Parameter]
+    public List<DiarySection> Sections { get; set; }
 
     /// <summary>
     /// Adds a new section to the UI to be edited by the user.
@@ -40,11 +41,8 @@
         Sections.Add(new DiarySection(sectionId));
     }
 
-    /// <summary>
-    /// Unsubscribes from StateContainer changes.
-    /// </summary>
-    public void Dispose()
+    private bool ShouldExpandPanel(DiarySection section)
     {
-        StateContainer.OnChange -= StateHasChanged;
+        return string.IsNullOrEmpty(section.Title);
     }
 }

@@ -10,7 +10,7 @@
         <Calendar Dates="Diaries.Entries.Keys" />
     </MudDrawer>
     <MudPaper Class="d-flex flex-column pa-4 overflow-x-auto" Height="100vh">
-        <DiaryEntry />
+        <DiaryEntry Date="Date" Sections="SelectedDiarySections" />
     </MudPaper>
 </MudDrawerContainer>
 
@@ -25,6 +25,8 @@
     {
         StateContainer.OnChange += StateHasChanged;
     }
+
+    private DateOnly Date => StateContainer.SelectedDate;
 
     /// <summary>
     /// Returns the diary sections for the selected date.

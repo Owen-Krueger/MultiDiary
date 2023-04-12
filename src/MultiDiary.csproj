@@ -50,14 +50,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Components\Overlay.razor.css" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="Components\Overlay.razor.css" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Majorsoft.Blazor.Components.Debounce" Version="1.5.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.2.0" />
