@@ -1,8 +1,18 @@
 ﻿@implements IDisposable
 @inject StateContainer StateContainer
 
-<Calendar Dates="Diaries.Entries.Keys" />
-<DiaryEntry Date="StateContainer.SelectedDate" Sections="SelectedDiarySections"/>
+<MudDrawerContainer>
+    <MudDrawer
+        Open="true"
+        Variant="DrawerVariant.Persistent"
+        Width="320px"
+    >
+        <Calendar Dates="Diaries.Entries.Keys" />
+    </MudDrawer>
+    <MudPaper Class="d-flex flex-column pa-4 overflow-x-auto" Height="100vh">
+        <DiaryEntry Date="StateContainer.SelectedDate" Sections="SelectedDiarySections" />
+    </MudPaper>
+</MudDrawerContainer>
 
 @code {
     [Parameter]

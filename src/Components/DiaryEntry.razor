@@ -1,21 +1,25 @@
 ﻿@inject IDiaryService diaryService;
 
-@foreach(var section in Sections)
-{
-    <DebounceInputText
-        @bind-Value="section.Title"
-        OnValueChanged="() => diaryService.UpsertSection(Date, section, false)"
-        DebounceTime="@debounceTimeMilleseconds"
-    />
-    <DebounceInputText
-        @bind-Value="section.Body"
-        OnValueChanged="() => diaryService.UpsertSection(Date, section, false)"
-        DebounceTime="@debounceTimeMilleseconds"
+<MudStack>
+    @foreach(var section in Sections)
+    {
+        <MudTextField
+            @bind-Value="section.Title"
+            Label="Title"
+            DebounceInterval="debounceTimeMilleseconds"
+            OnDebounceIntervalElapsed="() => diaryService.UpsertSection(Date, section, false)"
+            Lines="1"
         />
-    <br />
-}
-
-<button @onclick="AddSection">Add Section</button>
+        <MudTextField
+            @bind-Value="section.Body"
+            Label="Body"
+            DebounceInterval="debounceTimeMilleseconds"
+            OnDebounceIntervalElapsed="() => diaryService.UpsertSection(Date, section, false)"
+            Lines="5"
+        />
+    }
+</MudStack>
+<MudButton Variant="Variant.Filled" @onclick="AddSection" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Section</MudButton>
 
 @code {
     [Parameter]
