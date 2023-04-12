@@ -1,4 +1,5 @@
-﻿@inject IDiaryService diaryService;
+﻿@implements IDisposable
+@inject StateContainer StateContainer
 
 <MudStack>
     @foreach(var section in Sections)
@@ -16,10 +17,13 @@
 </MudStack>
 
 @code {
-    [Parameter]
-    public DateOnly Date { get; set; }
-    [Parameter]
-    public List<DiarySection> Sections { get; set; }
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    private DateOnly Date => StateContainer.SelectedDate;
+    private List<DiarySection> Sections => StateContainer.Diaries.Entries.SingleOrDefault(x => x.Key == Date).Value?.DiarySections ?? new List<DiarySection>();
 
     /// <summary>
     /// Adds a new section to the UI to be edited by the user.
@@ -34,5 +38,13 @@
             sectionId = Sections.Max(x => x.SectionId) + 1;
         }
         Sections.Add(new DiarySection(sectionId));
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }
