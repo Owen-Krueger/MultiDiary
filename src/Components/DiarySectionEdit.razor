@@ -23,12 +23,24 @@
 
     private const int debounceTimeMilleseconds = 2000;
 
+    /// <summary>
+    /// On title text box update, update diary file.
+    /// Updates are generated when user leaves title text box
+    /// or sits for 2 seconds.
+    /// </summary>
+    /// <param name="title">Updated title text</param>
     protected async Task OnTitleUpdatedAsync(string title)
     {
         DiarySection.Title = title;
         await diaryService.UpsertSection(Date, DiarySection, false);
     }
 
+    /// <summary>
+    /// On title text box update, update diary file.
+    /// Updates are generated when user leaves body text box
+    /// or sits for 2 seconds.
+    /// </summary>
+    /// <param name="body">Updated body text</param>
     protected async Task OnBodyUpdatedAsync(string body)
     {
         DiarySection.Body = body;

@@ -11,11 +11,18 @@
     [Parameter]
     public IEnumerable<DateOnly> Dates { get; set; }
 
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
     }
 
+    /// <summary>
+    /// Sets selected date in StatesContainer to what
+    /// the user selects in the UI.
+    /// </summary>
     private DateTime? selectedDateTime
     {
         get
@@ -28,12 +35,19 @@
         }
     }
 
+    /// <summary>
+    /// Applies CSS style if the date has diary entries present.
+    /// </summary>
+    /// <param name="date">Date to check</param>
+    /// <returns>CSS style to add to element.</returns>
     private string CheckDate(DateTime date)
     {
         return Dates.Contains(DateOnly.FromDateTime(date)) ? "selected-day" : string.Empty;
     }
 
-
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
     public void Dispose()
     {
         StateContainer.OnChange -= StateHasChanged;

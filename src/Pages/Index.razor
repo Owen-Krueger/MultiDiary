@@ -9,12 +9,19 @@
 }
 
 @code {
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// Gets diaries from file.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         StateContainer.OnChange += StateHasChanged;
         await DiaryService.GetDiariesAsync();
     }
 
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
     public void Dispose()
     {
         StateContainer.OnChange -= StateHasChanged;
