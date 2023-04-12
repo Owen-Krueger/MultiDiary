@@ -4,6 +4,7 @@
     @foreach(var section in Sections)
     {
         <MudTextField
+            Variant="Variant.Filled"
             @bind-Value="section.Title"
             Label="Title"
             DebounceInterval="debounceTimeMilleseconds"
@@ -11,6 +12,7 @@
             Lines="1"
         />
         <MudTextField
+            Variant="Variant.Filled"
             @bind-Value="section.Body"
             Label="Body"
             DebounceInterval="debounceTimeMilleseconds"
@@ -18,8 +20,15 @@
             Lines="5"
         />
     }
+    <MudButton
+        Variant="Variant.Filled"
+        @onclick="AddSection"
+        EndIcon="@Icons.Material.Filled.Add"
+        Color="Color.Primary"
+    >
+        Add Section
+    </MudButton>
 </MudStack>
-<MudButton Variant="Variant.Filled" @onclick="AddSection" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary">Add Section</MudButton>
 
 @code {
     [Parameter]
