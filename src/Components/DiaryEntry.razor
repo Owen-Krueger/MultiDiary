@@ -3,22 +3,7 @@
 <MudStack>
     @foreach(var section in Sections)
     {
-        <MudTextField
-            Variant="Variant.Filled"
-            @bind-Value="section.Title"
-            Label="Title"
-            DebounceInterval="debounceTimeMilleseconds"
-            OnDebounceIntervalElapsed="() => diaryService.UpsertSection(Date, section, false)"
-            Lines="1"
-        />
-        <MudTextField
-            Variant="Variant.Filled"
-            @bind-Value="section.Body"
-            Label="Body"
-            DebounceInterval="debounceTimeMilleseconds"
-            OnDebounceIntervalElapsed="() => diaryService.UpsertSection(Date, section, false)"
-            Lines="5"
-        />
+        <DiarySectionEdit Date="Date" DiarySection="section" />
     }
     <MudButton
         Variant="Variant.Filled"
@@ -35,8 +20,6 @@
     public DateOnly Date { get; set; }
     [Parameter]
     public List<DiarySection> Sections { get; set; }
-
-    private const int debounceTimeMilleseconds = 2000;
 
     private void AddSection()
     {

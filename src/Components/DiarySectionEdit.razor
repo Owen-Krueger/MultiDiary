@@ -1,0 +1,37 @@
+﻿@inject IDiaryService diaryService;
+
+<MudTextField Variant="Variant.Filled"
+              Value="DiarySection.Title"
+              Label="Title"
+              DebounceInterval="debounceTimeMilleseconds"
+              T="string"
+              ValueChanged="OnTitleUpdatedAsync"
+              Lines="1" />
+<MudTextField Variant="Variant.Filled"
+              Value="DiarySection.Body"
+              Label="Body"
+              DebounceInterval="debounceTimeMilleseconds"
+              T="string"
+              ValueChanged="OnBodyUpdatedAsync"
+              Lines="5" />
+
+@code {
+    [Parameter]
+    public DateOnly Date { get; set; }
+    [Parameter]
+    public DiarySection DiarySection { get; set; }
+
+    private const int debounceTimeMilleseconds = 2000;
+
+    protected async Task OnTitleUpdatedAsync(string title)
+    {
+        DiarySection.Title = title;
+        await diaryService.UpsertSection(Date, DiarySection, false);
+    }
+
+    protected async Task OnBodyUpdatedAsync(string body)
+    {
+        DiarySection.Body = body;
+        await diaryService.UpsertSection(Date, DiarySection, false);
+    }
+}
