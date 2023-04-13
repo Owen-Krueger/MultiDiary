@@ -1,24 +1,33 @@
 ﻿@inject IDiaryService diaryService;
 
-<MudTextField Variant="Variant.Filled"
-              Value="DiarySection.Title"
-              Label="Title"
-              DebounceInterval="debounceTimeMilleseconds"
-              T="string"
-              ValueChanged="OnTitleUpdatedAsync"
-              Lines="1" />
-<MudTextField Variant="Variant.Filled"
-              Value="DiarySection.Body"
-              Label="Body"
-              DebounceInterval="debounceTimeMilleseconds"
-              T="string"
-              ValueChanged="OnBodyUpdatedAsync"
-              Lines="5" />
-<MudButton Variant="Variant.Filled"
-           OnClick="RemoveSectionAsync"
-           Color="Color.Primary">
-    Delete Section
-</MudButton>
+<MudExpansionPanel
+    IsInitiallyExpanded="ShouldExpandPanel(DiarySection)"
+>
+    <TitleContent>
+        <div class="d-flex">
+            <MudTextField
+                Value="DiarySection.Title"
+                Label="Title"
+                DebounceInterval="debounceTimeMilleseconds"
+                T="string"
+                ValueChanged="OnTitleUpdatedAsync"
+                Lines="1"
+                />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                       aria-label="delete"
+                       OnClick="RemoveSectionAsync" />
+        </div>
+    </TitleContent>
+    <ChildContent>
+        <MudTextField Variant="Variant.Filled"
+                      Value="DiarySection.Body"
+                      Label="Body"
+                      DebounceInterval="debounceTimeMilleseconds"
+                      T="string"
+                      ValueChanged="OnBodyUpdatedAsync"
+                      Lines="5" />
+    </ChildContent>
+</MudExpansionPanel>
 
 @code {
     [Parameter]
@@ -55,5 +64,10 @@
     protected async Task RemoveSectionAsync()
     {
         await diaryService.RemoveDiarySectionAsync(Date, DiarySection.SectionId);
+    }
+
+    private bool ShouldExpandPanel(DiarySection section)
+    {
+        return string.IsNullOrEmpty(section.Title);
     }
 }

@@ -2,12 +2,7 @@
     <MudExpansionPanels MultiExpansion="true">
         @foreach(var section in Sections)
         {
-            <MudExpansionPanel
-                Text="@(section.Title)"
-                IsInitiallyExpanded="ShouldExpandPanel(section)"
-            >
-                <DiarySectionEdit Date="Date" DiarySection="section" />
-            </MudExpansionPanel>
+            <DiarySectionEdit Date="Date" DiarySection="section" />
         }
     </MudExpansionPanels>
     <MudButton
@@ -39,10 +34,5 @@
             sectionId = Sections.Max(x => x.SectionId) + 1;
         }
         Sections.Add(new DiarySection(sectionId));
-    }
-
-    private bool ShouldExpandPanel(DiarySection section)
-    {
-        return string.IsNullOrEmpty(section.Title);
     }
 }
