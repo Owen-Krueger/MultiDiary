@@ -1,5 +1,4 @@
 ﻿using MultiDiary.Models;
-using MultiDiary.Services.Prefernces;
 
 namespace MultiDiary.Services
 {
@@ -25,18 +24,6 @@ namespace MultiDiary.Services
             set
             {
                 diaryError = value;
-                NotifyStateChanged();
-            }
-        }
-
-        private DiaryPreferences diaryPreferences = new DiaryPreferences();
-
-        public DiaryPreferences DiaryPreferences
-        {
-            get => diaryPreferences;
-            set
-            {
-                diaryPreferences = value;
                 NotifyStateChanged();
             }
         }

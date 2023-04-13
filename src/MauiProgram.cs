@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using MultiDiary.Services;
-using MultiDiary.Services.Prefernces;
 
 namespace MultiDiary;
 
@@ -26,7 +25,6 @@ public static class MauiProgram
 
         builder.Services.AddMudServices();
         builder.Services.AddSingleton<StateContainer>();
-		builder.Services.AddTransient<IPreferencesService, PreferencesService>();
 		builder.Services.AddTransient<IDiaryService, DiaryService>();
 
 		return builder.Build();

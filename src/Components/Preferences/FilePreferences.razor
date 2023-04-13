@@ -1,20 +1,16 @@
-﻿@inject StateContainer StateContainer
-@inject IPreferencesService PrefrenceService
-@inject IDiaryService DiaryService
+﻿@inject IDiaryService DiaryService
 
 <div class="d-flex">
-    <MudTextField Value="StateContainer.DiaryPreferences.DiaryFile" Variant="Variant.Filled" />
+    <MudTextField Value="filePath" Variant="Variant.Filled" />
     <MudButton Variant="Variant.Filled" OnClick="SelectFile">Select</MudButton>
 </div>
 
 @code {
-    /// <summary>
-    /// Subscribes to StateContainer changes.
-    /// Gets diaries from file.
-    /// </summary>
+    private string filePath;
+
     protected override void OnInitialized()
     {
-        StateContainer.OnChange += StateHasChanged;
+        filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
     }
 
     protected async Task SelectFile()
@@ -22,20 +18,12 @@
         try
         {
             var result = await FilePicker.Default.PickAsync();
-            PrefrenceService.SetPreference(nameof(DiaryPreferences.DiaryFile), result.FullPath);
+            Preferences.Set(PreferenceKeys.DiaryFile, result.FullPath);
             await DiaryService.GetDiariesAsync();
         }
         catch (Exception) // The user canceled or something went wrong.
         {
             
         }
-    }
-
-    /// <summary>
-    /// Unsubscribes from StateContainer changes.
-    /// </summary>
-    public void Dispose()
-    {
-        StateContainer.OnChange -= StateHasChanged;
     }
 }

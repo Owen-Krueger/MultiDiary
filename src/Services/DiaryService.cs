@@ -1,5 +1,4 @@
 ﻿using MultiDiary.Models;
-using MultiDiary.Services.Prefernces;
 using Newtonsoft.Json;
 
 namespace MultiDiary.Services
@@ -7,20 +6,17 @@ namespace MultiDiary.Services
     public class DiaryService : IDiaryService
     {
         private readonly StateContainer stateContainer;
-        private readonly IPreferencesService preferencesService;
 
-        public DiaryService(StateContainer stateContainer, IPreferencesService preferencesService)
+        public DiaryService(StateContainer stateContainer)
         {
             this.stateContainer = stateContainer;
-            this.preferencesService = preferencesService;
         }
 
         public async Task GetDiariesAsync()
         {
             try
             {
-                preferencesService.GetStatePreferencesOrDefault();
-                var filePath = stateContainer.DiaryPreferences.DiaryFile;
+                var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
 
                 if (!File.Exists(filePath))
                 {
@@ -80,7 +76,7 @@ namespace MultiDiary.Services
         
         private async Task UpdateDiariesFileAsync()
         {
-            var filePath = stateContainer.DiaryPreferences.DiaryFile;
+            var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
             var diaries = stateContainer.Diaries ?? new Diaries();
             diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             diaries.Metadata.LastUpdated= DateTime.UtcNow;
