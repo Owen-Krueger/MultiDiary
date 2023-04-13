@@ -6,7 +6,10 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <FilePreferences />
+        <div class="d-flex flex-column gap-4">
+            <FilePreferences />
+            <DefaultSectionPreferences />
+        </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
