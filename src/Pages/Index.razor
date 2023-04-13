@@ -3,9 +3,17 @@
 @inject StateContainer StateContainer
 @inject IDiaryService DiaryService
 
-@if (StateContainer.Diaries != null)
+@if (StateContainer.Error == DiaryErrorConstants.FileNotFound)
 {
-    <DiaryView Diaries="StateContainer.Diaries" />
+    <p>Welcome</p>
+}
+else if (StateContainer.Error != DiaryErrorConstants.None)
+{
+    <p>Error</p>
+}
+else if (StateContainer.Diaries != null)
+{
+    <DiaryPage Diaries="StateContainer.Diaries" />
 }
 
 @code {

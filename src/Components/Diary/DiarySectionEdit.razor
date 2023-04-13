@@ -68,6 +68,7 @@
         parameters.Add("ContentText", "Do you really want to delete this section? This process cannot be undone.");
         parameters.Add("ButtonText", "Delete");
         parameters.Add("Color", Color.Error);
+        parameters.Add("ShowCancelButton", true);
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<SimpleDialog>("Delete", parameters, options);

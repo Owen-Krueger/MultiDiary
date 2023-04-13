@@ -4,26 +4,14 @@ namespace MultiDiary.Services
 {
     public class StateContainer
     {
-        private SelectedOverlay selectedOverlay = SelectedOverlay.None;
+        private string error = DiaryErrorConstants.None;
 
-        public SelectedOverlay SelectedOverlay
+        public string Error
         {
-            get => selectedOverlay;
+            get => error;
             set
             {
-                selectedOverlay = value;
-                NotifyStateChanged();
-            }
-        }
-
-        private string diaryError = null;
-
-        public string DiaryError
-        {
-            get => diaryError;
-            set
-            {
-                diaryError = value;
+                error = value;
                 NotifyStateChanged();
             }
         }
@@ -51,8 +39,6 @@ namespace MultiDiary.Services
                 NotifyStateChanged();
             }
         }
-
-        public bool ShouldShowOverlay => selectedOverlay != SelectedOverlay.None;
 
         public event Action OnChange;
 

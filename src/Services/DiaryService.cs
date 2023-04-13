@@ -18,15 +18,15 @@ namespace MultiDiary.Services
             {
                 var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
 
-                if (!File.Exists(filePath))
+                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 {
-                    await UpdateDiariesFileAsync();
+                    stateContainer.Error = DiaryErrorConstants.FileNotFound;
                 }
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
             }
             catch (Exception)
             {
-                stateContainer.DiaryError = DiaryErrorConstants.FailedToOpenFile;
+                stateContainer.Error = DiaryErrorConstants.FailedToOpenFile;
                 return;
             }
         }
