@@ -2,6 +2,7 @@
 @implements IDisposable
 @inject StateContainer StateContainer
 @inject IDiaryService DiaryService
+@inject IDialogService DialogService
 
 <MudDrawerContainer>
     <Sidebar Date="Date" Diaries="StateContainer.Diaries" />
@@ -19,6 +20,16 @@
     {
         StateContainer.OnChange += StateHasChanged;
         await DiaryService.GetDiariesAsync();
+
+        string error = StateContainer.Error;
+        if (error == DiaryErrorConstants.FileNotFound)
+        {
+            ShowGettingStartedDialog();
+        }
+        else if (error != DiaryErrorConstants.None)
+        {
+            ShowErrorDialog();
+        }
     }
 
     private DateOnly Date => StateContainer.SelectedDate;
@@ -27,6 +38,23 @@
     /// Returns the diary sections for the selected date.
     /// </summary>
     private List<DiarySection> SelectedDiarySections => StateContainer.Diaries.Entries.SingleOrDefault(x => x.Key == StateContainer.SelectedDate).Value?.DiarySections ?? new List<DiarySection>();
+
+    protected void ShowGettingStartedDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = false, CloseButton = false, MaxWidth = MaxWidth.Large };
+        DialogService.Show<GettingStartedDialog>("Welcome!", options);
+    }
+
+    protected void ShowErrorDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", StateContainer.Error);
+        parameters.Add("ButtonText", "Okay");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<SimpleDialog>("Error!", parameters, options);
+    }
 
     /// <summary>
     /// Unsubscribes from StateContainer changes.
