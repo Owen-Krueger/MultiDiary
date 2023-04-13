@@ -1,10 +1,25 @@
-﻿<MudText><strong>Default Sections</strong></MudText>
+﻿@inject IDialogService DialogService
+@inject IDiaryService DiaryService
+
+<MudText><strong>Default Sections</strong></MudText>
 <MudButton
     Variant="Variant.Filled"
-    Color="Color.Primary" >
+    Color="Color.Primary" 
+    OnClick="ShowDefaultSectionDialogAsync"
+>
     Set Default Sections
 </MudButton>
 
 @code {
 
+    protected async Task ShowDefaultSectionDialogAsync()
+    {
+        var dialog = DialogService.Show<DefaultSectionPreferencesDialog>("Default Sections");
+        var result = await dialog.Result;
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            await DiaryService.UpdateDiariesFileAsync();
+        }
+    }
 }

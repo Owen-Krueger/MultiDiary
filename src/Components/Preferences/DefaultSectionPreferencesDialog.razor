@@ -1,0 +1,70 @@
+﻿@implements IDisposable
+@inject StateContainer StateContainer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.NoteAlt" Class="mr-3" /> Default Sections
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @foreach (var section in StateContainer.Diaries.DefaultSections)
+        {
+            <div class="d-flex pa-2">
+                <MudTextField
+                    Label="Section"
+                    Variant="Variant.Filled"
+                    @bind-Value="section.DefaultTitle" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                            aria-label="delete"
+                            OnClick="() => DeleteSection(section)" 
+                            tabindex="-1" />
+            </div>
+        }
+        <MudButton Variant="Variant.Filled"
+                   OnClick="AddSection"
+                   EndIcon="@Icons.Material.Filled.Add"
+                   Color="Color.Primary"
+                   Class="ma-2"
+                   accesskey="N">
+            Add Section
+        </MudButton>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    protected void AddSection()
+    {
+        StateContainer.Diaries.DefaultSections.Add(new DefaultSection());
+    }
+
+    protected void DeleteSection(DefaultSection defaultSection)
+    {
+        StateContainer.Diaries.DefaultSections.Remove(defaultSection);
+    }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+
+}
+

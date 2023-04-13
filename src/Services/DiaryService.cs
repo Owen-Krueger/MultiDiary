@@ -84,7 +84,7 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
         }
         
-        private async Task UpdateDiariesFileAsync()
+        public async Task UpdateDiariesFileAsync()
         {
             var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
             if (string.IsNullOrEmpty(filePath))

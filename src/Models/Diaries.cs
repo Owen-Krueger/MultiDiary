@@ -27,7 +27,7 @@
 
     public class DefaultSection
     {
-        public string DefaultTitle { get; set; }
+        public string DefaultTitle { get; set; } = string.Empty;
     }
 
     public class DiaryEntry
