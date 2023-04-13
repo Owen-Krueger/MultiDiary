@@ -18,4 +18,24 @@
     public DateOnly Date { get; set; }
     [Parameter]
     public List<DiarySection> Sections { get; set; }
+    [Parameter]
+    public List<DefaultSection> DefaultSections { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!Sections.Any() && DefaultSections.Any())
+        {
+            SetSectionsFromDefault();
+        }
+    }
+
+    private void SetSectionsFromDefault()
+    {
+        int index = 0;
+        foreach (var section in DefaultSections)
+        {
+            index++;
+            Sections.Add(new DiarySection() { SectionId = index, Title = section.DefaultTitle });
+        }
+    }
 }

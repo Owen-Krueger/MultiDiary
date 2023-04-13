@@ -13,6 +13,8 @@
 
         public DiaryMetadata Metadata { get; set; } = new();
 
+        public List<DefaultSection> DefaultSections { get; set; } = new();
+
         public Dictionary<DateOnly, DiaryEntry> Entries { get; set; } = new();
     }
 
@@ -23,13 +25,18 @@
         public DateTimeOffset LastUpdated { get; set; }
     }
 
+    public class DefaultSection
+    {
+        public string DefaultTitle { get; set; }
+    }
+
     public class DiaryEntry
     {
         public List<DiarySection> DiarySections { get; set; } = new();
 
     }
 
-    public class DiarySection : ICloneable
+    public class DiarySection
     {
         public DiarySection() { }
 
@@ -43,15 +50,5 @@
         public string Title { get; set; } = string.Empty;
 
         public string Body { get; set; } = string.Empty;
-
-        public object Clone()
-        {
-            return new DiarySection()
-            {
-                SectionId = SectionId,
-                Title = (string)Title.Clone(),
-                Body = (string)Body.Clone()
-            };
-        }
     }
 }
