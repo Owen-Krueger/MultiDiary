@@ -9,9 +9,17 @@
             this.stateContainer = stateContainer;
         }
 
-        public void SetStatePreferencesOrDefault()
+        public void GetStatePreferencesOrDefault()
         {
-            stateContainer.DiaryPreferences.DiaryFile = Preferences.Default.Get("DiaryFile", DiaryPreferenceDefaults.DiaryFile);
+            stateContainer.DiaryPreferences.DiaryFile = Preferences.Default.Get(nameof(stateContainer.DiaryPreferences.DiaryFile), DiaryPreferenceDefaults.DiaryFile);
+        }
+
+        public void SetPreference<T>(string key, T value)
+        {
+            Preferences.Default.Set(key, value);
+
+            var stateProperty = stateContainer.DiaryPreferences.GetType().GetProperty(key);
+            stateProperty?.SetValue(stateContainer.DiaryPreferences, value);
         }
     }
 }

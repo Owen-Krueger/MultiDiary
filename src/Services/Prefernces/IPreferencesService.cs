@@ -2,6 +2,7 @@
 {
     public interface IPreferencesService
     {
-        void SetStatePreferencesOrDefault();
+        void GetStatePreferencesOrDefault();
+        void SetPreference<T>(string key, T value);
     }
 }

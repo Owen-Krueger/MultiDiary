@@ -1,8 +1,10 @@
 ﻿@inject StateContainer StateContainer
+@inject IPreferencesService PrefrenceService
+@inject IDiaryService DiaryService
 
 <div class="d-flex">
     <MudTextField Value="StateContainer.DiaryPreferences.DiaryFile" Variant="Variant.Filled" />
-    <MudButton Variant="Variant.Filled">Select</MudButton>
+    <MudButton Variant="Variant.Filled" OnClick="SelectFile">Select</MudButton>
 </div>
 
 @code {
@@ -13,6 +15,20 @@
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
+    }
+
+    protected async Task SelectFile()
+    {
+        try
+        {
+            var result = await FilePicker.Default.PickAsync();
+            PrefrenceService.SetPreference(nameof(DiaryPreferences.DiaryFile), result.FullPath);
+            await DiaryService.GetDiariesAsync();
+        }
+        catch (Exception) // The user canceled or something went wrong.
+        {
+            
+        }
     }
 
     /// <summary>

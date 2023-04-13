@@ -19,14 +19,13 @@ namespace MultiDiary.Services
         {
             try
             {
-                preferencesService.SetStatePreferencesOrDefault();
-                var filePath = GetFilePath();
+                preferencesService.GetStatePreferencesOrDefault();
+                var filePath = stateContainer.DiaryPreferences.DiaryFile;
 
                 if (!File.Exists(filePath))
                 {
                     await UpdateDiariesFileAsync();
                 }
-
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
             }
             catch (Exception)
@@ -81,18 +80,13 @@ namespace MultiDiary.Services
         
         private async Task UpdateDiariesFileAsync()
         {
-            var filePath = GetFilePath();
+            var filePath = stateContainer.DiaryPreferences.DiaryFile;
             var diaries = stateContainer.Diaries ?? new Diaries();
             diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             diaries.Metadata.LastUpdated= DateTime.UtcNow;
 
             await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
             stateContainer.Diaries = diaries; // To force the UI to refresh.
-        }
-
-        private string GetFilePath()
-        {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), stateContainer.DiaryPreferences.DiaryFile);
         }
     }
 }
