@@ -3,18 +3,12 @@
 @inject StateContainer StateContainer
 @inject IDiaryService DiaryService
 
-@if (StateContainer.Error == DiaryErrorConstants.FileNotFound)
-{
-    <p>Welcome</p>
-}
-else if (StateContainer.Error != DiaryErrorConstants.None)
-{
-    <p>Error</p>
-}
-else if (StateContainer.Diaries != null)
-{
-    <DiaryPage Diaries="StateContainer.Diaries" />
-}
+<MudDrawerContainer>
+    <Sidebar Date="Date" Diaries="StateContainer.Diaries" />
+    <div class="pa-4">
+        <DiaryEntry Date="Date" Sections="SelectedDiarySections" />
+    </div>
+</MudDrawerContainer>
 
 @code {
     /// <summary>
@@ -26,6 +20,13 @@ else if (StateContainer.Diaries != null)
         StateContainer.OnChange += StateHasChanged;
         await DiaryService.GetDiariesAsync();
     }
+
+    private DateOnly Date => StateContainer.SelectedDate;
+
+    /// <summary>
+    /// Returns the diary sections for the selected date.
+    /// </summary>
+    private List<DiarySection> SelectedDiarySections => StateContainer.Diaries.Entries.SingleOrDefault(x => x.Key == StateContainer.SelectedDate).Value?.DiarySections ?? new List<DiarySection>();
 
     /// <summary>
     /// Unsubscribes from StateContainer changes.

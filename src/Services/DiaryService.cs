@@ -21,6 +21,7 @@ namespace MultiDiary.Services
                 if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 {
                     stateContainer.Error = DiaryErrorConstants.FileNotFound;
+                    return;
                 }
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
             }

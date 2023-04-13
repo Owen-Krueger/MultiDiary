@@ -16,7 +16,7 @@ namespace MultiDiary.Services
             }
         }
 
-        private Diaries diaries = null;
+        private Diaries diaries = new();
 
         public Diaries Diaries
         {

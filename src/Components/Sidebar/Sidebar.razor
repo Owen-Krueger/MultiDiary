@@ -1,5 +1,7 @@
-﻿@inject IDiaryService DiaryService
+﻿@implements IDisposable
+@inject IDiaryService DiaryService
 @inject IDialogService DialogService
+@inject StateContainer StateContainer
 
 <MudDrawer Open="true"
            Variant="DrawerVariant.Persistent"
@@ -10,7 +12,8 @@
                OnClick="AddSection"
                EndIcon="@Icons.Material.Filled.Add"
                Color="Color.Primary"
-               Class="ma-2">
+               Class="ma-2"
+               Disabled="StateContainer.Error != DiaryErrorConstants.None">
         Add Section
     </MudButton>
     @*<div class="position-absolute bottom-0 start-0">*@
@@ -29,6 +32,14 @@
     public Diaries Diaries { get; set; }
 
     /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    /// <summary>
     /// Adds a new section to the UI to be edited by the user.
     /// The section will be given an ID of 1 if it's the first
     /// section, or whatever the largest ID is plus 1.
@@ -42,5 +53,13 @@
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Large };
         DialogService.Show<PreferencesDialog>("Preferences", options);
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }
