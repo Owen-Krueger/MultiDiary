@@ -1,0 +1,25 @@
+﻿@inject StateContainer StateContainer
+
+<div class="d-flex">
+    <MudTextField Value="StateContainer.DiaryPreferences.DiaryFile" Variant="Variant.Filled" />
+    <MudButton Variant="Variant.Filled">Select</MudButton>
+</div>
+
+@code {
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// Gets diaries from file.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,46 @@
+﻿@inject IDiaryService DiaryService
+@inject IDialogService DialogService
+
+<MudDrawer Open="true"
+           Variant="DrawerVariant.Persistent"
+           Width="320px"
+           Height="100vh" >
+    <Calendar Dates="Diaries.Entries.Keys" />
+    <MudButton Variant="Variant.Filled"
+               OnClick="AddSection"
+               EndIcon="@Icons.Material.Filled.Add"
+               Color="Color.Primary"
+               Class="ma-2">
+        Add Section
+    </MudButton>
+    @*<div class="position-absolute bottom-0 start-0">*@
+    <div class="test">
+        <MudIconButton Icon="@Icons.Material.Filled.Settings"
+                       aria-label="settings"
+                       OnClick="OpenPreferences" 
+                       tabindex="-1" />
+    </div>
+</MudDrawer>
+
+@code {
+    [Parameter]
+    public DateOnly Date { get; set; }
+    [Parameter]
+    public Diaries Diaries { get; set; }
+
+    /// <summary>
+    /// Adds a new section to the UI to be edited by the user.
+    /// The section will be given an ID of 1 if it's the first
+    /// section, or whatever the largest ID is plus 1.
+    /// </summary>
+    private void AddSection()
+    {
+        DiaryService.UpsertSection(Date, new DiarySection(), true);
+    }
+
+    private void OpenPreferences()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Large };
+        DialogService.Show<PreferencesDialog>("Preferences", options);
+    }
+}

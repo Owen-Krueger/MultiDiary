@@ -1,22 +1,8 @@
 ﻿@implements IDisposable
 @inject StateContainer StateContainer
-@inject IDiaryService DiaryService
 
 <MudDrawerContainer>
-    <MudDrawer
-        Open="true"
-        Variant="DrawerVariant.Persistent"
-        Width="320px"
-    >
-        <Calendar Dates="Diaries.Entries.Keys" />
-        <MudButton Variant="Variant.Filled"
-                   OnClick="AddSection"
-                   EndIcon="@Icons.Material.Filled.Add"
-                   Color="Color.Primary"
-                   Class="ma-2">
-            Add Section
-        </MudButton>
-    </MudDrawer>
+    <DiarySidebar Date="Date" Diaries="Diaries" />
     <div class="pa-4">
         <DiaryEntry Date="Date" Sections="SelectedDiarySections" />
     </div>
@@ -40,16 +26,6 @@
     /// Returns the diary sections for the selected date.
     /// </summary>
     private List<DiarySection> SelectedDiarySections => Diaries.Entries.SingleOrDefault(x => x.Key == StateContainer.SelectedDate).Value?.DiarySections ?? new List<DiarySection>();
-
-    /// <summary>
-    /// Adds a new section to the UI to be edited by the user.
-    /// The section will be given an ID of 1 if it's the first
-    /// section, or whatever the largest ID is plus 1.
-    /// </summary>
-    private void AddSection()
-    {
-        DiaryService.UpsertSection(Date, new DiarySection(), true);
-    }
 
     /// <summary>
     /// Unsubscribes from StateContainer changes.
