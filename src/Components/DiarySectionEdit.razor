@@ -1,4 +1,5 @@
-﻿@inject IDiaryService diaryService;
+﻿@inject IDiaryService DiaryService
+@inject IDialogService DialogService
 
 <MudExpansionPanel
     IsInitiallyExpanded="ShouldExpandPanel(DiarySection)"
@@ -15,7 +16,7 @@
                 />
             <MudIconButton Icon="@Icons.Material.Filled.Delete"
                        aria-label="delete"
-                       OnClick="RemoveSectionAsync" />
+                       OnClick="DeleteSection" />
         </div>
     </TitleContent>
     <ChildContent>
@@ -46,7 +47,7 @@
     protected async Task OnTitleUpdatedAsync(string title)
     {
         DiarySection.Title = title;
-        await diaryService.UpsertSection(Date, DiarySection, false);
+        await DiaryService.UpsertSection(Date, DiarySection, false);
     }
 
     /// <summary>
@@ -58,16 +59,28 @@
     protected async Task OnBodyUpdatedAsync(string body)
     {
         DiarySection.Body = body;
-        await diaryService.UpsertSection(Date, DiarySection, false);
-    }
-
-    protected async Task RemoveSectionAsync()
-    {
-        await diaryService.RemoveDiarySectionAsync(Date, DiarySection.SectionId);
+        await DiaryService.UpsertSection(Date, DiarySection, false);
     }
 
     private bool ShouldExpandPanel(DiarySection section)
     {
         return string.IsNullOrEmpty(section.Title);
+    }
+
+    private async Task DeleteSection()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this section? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<SimpleDialog>("Delete", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            await DiaryService.RemoveDiarySectionAsync(Date, DiarySection.SectionId);
+        }
     }
 }
