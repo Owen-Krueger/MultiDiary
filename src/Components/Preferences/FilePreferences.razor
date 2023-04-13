@@ -8,11 +8,13 @@
     <MudTextField
         Value="filePath"
         Variant="Variant.Filled"
-        FullWidth="true"
-        @onclick="SelectFile"/>
+        Label="File Path"
+        @onclick="SelectFile"
+        Class="mr-4" />
     <MudButton
         Variant="Variant.Filled"
-        OnClick="SelectFile">
+        OnClick="SelectFile"
+        Color="Color.Primary" >
         Select
     </MudButton>
 </div>

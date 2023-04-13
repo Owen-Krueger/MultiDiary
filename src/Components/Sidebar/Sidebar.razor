@@ -9,15 +9,15 @@
            Height="100vh" >
     <Calendar Dates="Diaries.Entries.Keys" />
     <MudButton Variant="Variant.Filled"
-               OnClick="AddSection"
-               EndIcon="@Icons.Material.Filled.Add"
-               Color="Color.Primary"
-               Class="ma-2"
-               Disabled="StateContainer.Error != DiaryErrorConstants.None">
+                OnClick="AddSection"
+                EndIcon="@Icons.Material.Filled.Add"
+                Color="Color.Primary"
+                Disabled="StateContainer.Error != DiaryErrorConstants.None"
+                Class="ma-2"
+                accesskey="N" >
         Add Section
     </MudButton>
-    @*<div class="position-absolute bottom-0 start-0">*@
-    <div class="test">
+    <div class="settings">
         <MudIconButton Icon="@Icons.Material.Filled.Settings"
                        aria-label="settings"
                        OnClick="OpenPreferences" 
