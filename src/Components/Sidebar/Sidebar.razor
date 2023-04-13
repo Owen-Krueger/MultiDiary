@@ -9,13 +9,21 @@
            Height="100vh" >
     <Calendar Dates="Diaries.Entries.Keys" />
     <MudButton Variant="Variant.Filled"
-                OnClick="AddSection"
-                EndIcon="@Icons.Material.Filled.Add"
-                Color="Color.Primary"
-                Disabled="StateContainer.Error != DiaryErrorConstants.None"
-                Class="ma-2"
-                accesskey="N" >
+               OnClick="AddSection"
+               EndIcon="@Icons.Material.Filled.Add"
+               Color="Color.Primary"
+               Disabled="StateContainer.Error != DiaryErrorConstants.None"
+               Class="ma-2"
+               accesskey="N">
         Add Section
+    </MudButton>
+    <MudButton Variant="Variant.Filled"
+               OnClick="DeleteEntry"
+               EndIcon="@Icons.Material.Filled.Delete"
+               Color="Color.Error"
+               Disabled="StateContainer.Error != DiaryErrorConstants.None"
+               Class="ma-2">
+        Remove Entry
     </MudButton>
     <div class="settings">
         <MudIconButton Icon="@Icons.Material.Filled.Settings"
@@ -53,6 +61,27 @@
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
         DialogService.Show<PreferencesDialog>("Preferences", options);
+    }
+
+    /// <summary>
+    /// Confirm the section should be deleted and delete if desired.
+    /// </summary>
+    private async Task DeleteEntry()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this entry? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+        parameters.Add("ShowCancelButton", true);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<SimpleDialog>("Delete", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            await DiaryService.RemoveEntryAsync(Date);
+        }
     }
 
     /// <summary>

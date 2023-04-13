@@ -67,6 +67,17 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
         }
 
+        public async Task RemoveEntryAsync(DateOnly date)
+        {
+            var entries = stateContainer.Diaries.Entries;
+            if (!entries.ContainsKey(date))
+            {
+                // Bad
+            }
+            entries.Remove(date);
+            await UpdateDiariesFileAsync();
+        }
+
         public async Task RemoveDiarySectionAsync(DateOnly date, int sectionId)
         {
             var entries = stateContainer.Diaries.Entries;
