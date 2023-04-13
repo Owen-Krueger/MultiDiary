@@ -87,6 +87,7 @@ namespace MultiDiary.Services
             diaries.Metadata.LastUpdated= DateTime.UtcNow;
 
             await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
+            stateContainer.Diaries = diaries; // To force the UI to refresh.
         }
 
         private string GetFilePath()

@@ -1,25 +1,20 @@
 ﻿@inject IDiaryService DiaryService
 @inject IDialogService DialogService
 
-<MudExpansionPanel
-    IsInitiallyExpanded="ShouldExpandPanel(DiarySection)"
->
-    <TitleContent>
-        <div class="d-flex">
-            <MudTextField
-                Value="DiarySection.Title"
-                Label="Title"
-                DebounceInterval="debounceTimeMilleseconds"
-                T="string"
-                ValueChanged="OnTitleUpdatedAsync"
-                Lines="1"
-                />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                       aria-label="delete"
-                       OnClick="DeleteSection" />
-        </div>
-    </TitleContent>
+<MudPaper Class="pa-2">
     <ChildContent>
+    <div class="d-flex pa-2">
+        <MudTextField Value="DiarySection.Title"
+                        Label="Title"
+                        DebounceInterval="debounceTimeMilleseconds"
+                        T="string"
+                        ValueChanged="OnTitleUpdatedAsync"
+                        Lines="1" />
+        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                    aria-label="delete"
+                    OnClick="DeleteSection" />
+    </div>
+    <div class="pa-2">
         <MudTextField Variant="Variant.Filled"
                       Value="DiarySection.Body"
                       Label="Body"
@@ -27,8 +22,9 @@
                       T="string"
                       ValueChanged="OnBodyUpdatedAsync"
                       Lines="5" />
+    </div>
     </ChildContent>
-</MudExpansionPanel>
+</MudPaper>
 
 @code {
     [Parameter]
@@ -37,6 +33,7 @@
     public DiarySection DiarySection { get; set; }
 
     private const int debounceTimeMilleseconds = 2000;
+    private bool textBoxFocused = true;
 
     /// <summary>
     /// On title text box update, update diary file.
@@ -62,11 +59,9 @@
         await DiaryService.UpsertSection(Date, DiarySection, false);
     }
 
-    private bool ShouldExpandPanel(DiarySection section)
-    {
-        return string.IsNullOrEmpty(section.Title);
-    }
-
+    /// <summary>
+    /// Confirm the section should be deleted and delete if desired.
+    /// </summary>
     private async Task DeleteSection()
     {
         var parameters = new DialogParameters();
