@@ -1,38 +1,17 @@
-﻿<MudStack>
-    <MudExpansionPanels MultiExpansion="true">
-        @foreach(var section in Sections)
-        {
-            <DiarySectionEdit Date="Date" DiarySection="section" />
-        }
-    </MudExpansionPanels>
-    <MudButton
-        Variant="Variant.Filled"
-        OnClick="AddSection"
-        EndIcon="@Icons.Material.Filled.Add"
-        Color="Color.Primary"
-    >
-        Add Section
-    </MudButton>
-</MudStack>
+﻿<div class="d-flex flex-column" style="height:96vh; overflow-x:auto;">
+    <MudStack>
+        <MudExpansionPanels MultiExpansion="true">
+            @foreach(var section in Sections)
+            {
+                <DiarySectionEdit Date="Date" DiarySection="section" />
+            }
+        </MudExpansionPanels>
+    </MudStack>
+</div>
 
 @code {
     [Parameter]
     public DateOnly Date { get; set; }
     [Parameter]
     public List<DiarySection> Sections { get; set; }
-
-    /// <summary>
-    /// Adds a new section to the UI to be edited by the user.
-    /// The section will be given an ID of 1 if it's the first
-    /// section, or whatever the largest ID is plus 1.
-    /// </summary>
-    private void AddSection()
-    {
-        int sectionId = 1;
-        if (Sections.Any())
-        {
-            sectionId = Sections.Max(x => x.SectionId) + 1;
-        }
-        Sections.Add(new DiarySection(sectionId));
-    }
 }
