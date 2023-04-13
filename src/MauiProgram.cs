@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
+using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using MultiDiary.Services;
 
@@ -11,6 +13,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -24,6 +27,7 @@ public static class MauiProgram
 #endif
 
         builder.Services.AddMudServices();
+		builder.Services.AddSingleton(FolderPicker.Default);
         builder.Services.AddSingleton<StateContainer>();
 		builder.Services.AddTransient<IDiaryService, DiaryService>();
 

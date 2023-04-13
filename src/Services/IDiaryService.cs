@@ -4,7 +4,7 @@ namespace MultiDiary.Services
 {
     public interface IDiaryService
     {
-        Task GetDiariesAsync();
+        void GetDiaries();
         Task RemoveDiarySectionAsync(DateOnly date, int sectionId);
         Task UpsertSection(DateOnly date, DiarySection diarySection, bool newSection);
     }

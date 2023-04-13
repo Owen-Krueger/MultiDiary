@@ -12,7 +12,7 @@ namespace MultiDiary.Services
             this.stateContainer = stateContainer;
         }
 
-        public async Task GetDiariesAsync()
+        public void GetDiaries()
         {
             try
             {
@@ -24,6 +24,7 @@ namespace MultiDiary.Services
                     return;
                 }
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
+                stateContainer.Error = DiaryErrorConstants.None;
             }
             catch (Exception)
             {

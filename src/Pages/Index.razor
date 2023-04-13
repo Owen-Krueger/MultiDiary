@@ -16,10 +16,10 @@
     /// Subscribes to StateContainer changes.
     /// Gets diaries from file.
     /// </summary>
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
-        await DiaryService.GetDiariesAsync();
+        DiaryService.GetDiaries();
 
         string error = StateContainer.Error;
         if (error == DiaryErrorConstants.FileNotFound)
@@ -41,7 +41,12 @@
 
     protected void ShowGettingStartedDialog()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = false, CloseButton = false, MaxWidth = MaxWidth.Large };
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            CloseButton = false,
+            DisableBackdropClick = true
+        };
         DialogService.Show<GettingStartedDialog>("Welcome!", options);
     }
 
@@ -52,8 +57,7 @@
         parameters.Add("ButtonText", "Okay");
         parameters.Add("Color", Color.Error);
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<SimpleDialog>("Error!", parameters, options);
+        var dialog = DialogService.Show<SimpleDialog>("Error!", parameters);
     }
 
     /// <summary>

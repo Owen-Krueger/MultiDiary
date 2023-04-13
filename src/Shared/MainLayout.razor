@@ -1,5 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="true" />
-<MudDialogProvider />
+<MudDialogProvider
+    CloseButton="true"
+    CloseOnEscapeKey="true"
+    DisableBackdropClick="false"
+    MaxWidth="MaxWidth.Small"
+    FullWidth="true" />
 @Body

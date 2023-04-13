@@ -1,8 +1,17 @@
 ﻿@inject IDiaryService DiaryService
+@inject IFolderPicker FolderPicker
 
 <div class="d-flex">
-    <MudTextField Value="filePath" Variant="Variant.Filled" />
-    <MudButton Variant="Variant.Filled" OnClick="SelectFile">Select</MudButton>
+    <MudTextField
+        Value="filePath"
+        Variant="Variant.Filled"
+        FullWidth="true"
+        @onclick="SelectFile"/>
+    <MudButton
+        Variant="Variant.Filled"
+        OnClick="SelectFile">
+        Select
+    </MudButton>
 </div>
 
 @code {
@@ -17,9 +26,12 @@
     {
         try
         {
-            var result = await FilePicker.Default.PickAsync();
-            Preferences.Set(PreferenceKeys.DiaryFile, result.FullPath);
-            await DiaryService.GetDiariesAsync();
+            var result = await FolderPicker.PickAsync(CancellationToken.None);
+            if (result.IsSuccessful)
+            {
+                Preferences.Set(PreferenceKeys.DiaryFile, $"{result.Folder.Path}\\multi-diary.txt");
+                await DiaryService.GetDiaries();
+            }
         }
         catch (Exception) // The user canceled or something went wrong.
         {
