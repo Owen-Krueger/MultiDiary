@@ -5,12 +5,9 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudText>Welcome to Multi-Diary! Select a folder to create your diary file or a folder that contains an existing "multi-diary.txt" file.</MudText>
-        <FilePreferences />
+        <MudText>Select a folder to create your diary file in or a folder that contains an existing "multi-diary.txt" file to use.</MudText>
+        <FilePreferences OnDiarySelected="Submit" />
     </DialogContent>
-    <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
 </MudDialog>
 
 @code {

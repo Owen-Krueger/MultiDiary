@@ -1,5 +1,8 @@
-﻿@inject IDiaryService DiaryService
+﻿@implements IDisposable
+@inject IDiaryService DiaryService
 @inject IFolderPicker FolderPicker
+@inject IDialogService DialogService
+@inject StateContainer StateContainer
 
 <div class="d-flex">
     <MudTextField
@@ -15,27 +18,74 @@
 </div>
 
 @code {
+    [Parameter]
+    public EventCallback OnDiarySelected { get; set; }
+
     private string filePath;
 
     protected override void OnInitialized()
     {
+        StateContainer.OnChange += StateHasChanged;
         filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
     }
 
     protected async Task SelectFile()
     {
+        bool diaryFileSelected = false;
         try
         {
             var result = await FolderPicker.PickAsync(CancellationToken.None);
             if (result.IsSuccessful)
             {
                 Preferences.Set(PreferenceKeys.DiaryFile, $"{result.Folder.Path}\\multi-diary.txt");
-                await DiaryService.GetDiaries();
+                diaryFileSelected = DiaryService.GetDiaries();
+
+                if (StateContainer.Error == DiaryErrorConstants.FileNotFound)
+                {
+                    diaryFileSelected = await ConfirmAsync();
+                }
+
+                if (diaryFileSelected)
+                {
+                    await OnDiarySelected.InvokeAsync();
+                }
             }
         }
         catch (Exception) // The user canceled or something went wrong.
         {
-            
+
         }
+    }
+
+    /// <summary>
+    /// Confirm the section should be deleted and delete if desired.
+    /// </summary>
+    private async Task<bool> ConfirmAsync()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "This will create a new file to store diary information. Continue?");
+        parameters.Add("ButtonText", "Continue");
+        parameters.Add("Color", Color.Primary);
+        parameters.Add("ShowCancelButton", true);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<SimpleDialog>("Continue", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            await DiaryService.CreateDiaryAsync();
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

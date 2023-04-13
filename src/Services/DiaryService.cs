@@ -12,7 +12,7 @@ namespace MultiDiary.Services
             this.stateContainer = stateContainer;
         }
 
-        public void GetDiaries()
+        public bool GetDiaries()
         {
             try
             {
@@ -21,16 +21,24 @@ namespace MultiDiary.Services
                 if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 {
                     stateContainer.Error = DiaryErrorConstants.FileNotFound;
-                    return;
+                    return false;
                 }
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
                 stateContainer.Error = DiaryErrorConstants.None;
+                return true;
             }
             catch (Exception)
             {
                 stateContainer.Error = DiaryErrorConstants.FailedToOpenFile;
-                return;
+                return false;
             }
+        }
+
+        public async Task CreateDiaryAsync()
+        {
+            stateContainer.Diaries = new Diaries();
+            await UpdateDiariesFileAsync();
+            GetDiaries();
         }
 
         public async Task UpsertSection(DateOnly date, DiarySection diarySection, bool newSection)
@@ -79,6 +87,12 @@ namespace MultiDiary.Services
         private async Task UpdateDiariesFileAsync()
         {
             var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
+            if (string.IsNullOrEmpty(filePath))
+            {
+                // Bad
+                return;
+            }
+
             var diaries = stateContainer.Diaries ?? new Diaries();
             diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             diaries.Metadata.LastUpdated= DateTime.UtcNow;

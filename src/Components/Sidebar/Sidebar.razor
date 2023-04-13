@@ -51,7 +51,7 @@
 
     private void OpenPreferences()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Large };
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
         DialogService.Show<PreferencesDialog>("Preferences", options);
     }
 
