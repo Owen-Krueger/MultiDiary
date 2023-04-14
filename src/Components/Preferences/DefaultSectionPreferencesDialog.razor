@@ -11,7 +11,7 @@
         <MudCheckBox
             Color="Color.Primary"
             @bind-Checked="StateContainer.Diaries.DiarySettings.ReadOnlyDefaultSectionTitles" 
-            Label="Lock Section Titles" />
+            Label="Set Default Section Titles to be Read-only" />
         @foreach (var section in StateContainer.Diaries.DefaultSections)
         {
             <div class="d-flex pa-2">
