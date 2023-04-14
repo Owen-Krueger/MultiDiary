@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Layouts;
+using MudBlazor;
 using MultiDiary.Models;
 
 namespace MultiDiary.Services
@@ -53,10 +54,21 @@ namespace MultiDiary.Services
             }
         }
 
+        /// <summary>
+        /// Sets the selected date and selected sections.
+        /// Clones the diary sections, so changes that are made while editing
+        /// don't update the main diary sections by being copied by reference
+        /// until the user requests the diary be updated.
+        /// </summary>
         public void SelectEntry(DateOnly date)
         {
             SelectedDate = date;
-            SelectedSections = Diaries.Entries.SingleOrDefault(x => x.Key == date).Value?.DiarySections ?? new List<DiarySection>();
+            SelectedSections.Clear();
+            var sections = Diaries.Entries.SingleOrDefault(x => x.Key == date).Value?.DiarySections ?? new List<DiarySection>();
+            sections.ForEach((section) =>
+            {
+                SelectedSections.Add((DiarySection)section.Clone());
+            });
         }
 
         public void RemoveSection(DateOnly date, int sectionId)

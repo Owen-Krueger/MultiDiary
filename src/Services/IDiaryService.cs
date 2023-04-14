@@ -6,7 +6,7 @@ namespace MultiDiary.Services
     {
         Task CreateDiaryAsync();
         bool GetDiaries();
-        Task RemoveEntryAsync(DateOnly date);
+        Task RemoveEntryAsync();
         Task UpdateDiaryAsync();
     }
 }

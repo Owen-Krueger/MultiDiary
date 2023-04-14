@@ -39,7 +39,7 @@
 
     }
 
-    public class DiarySection
+    public class DiarySection : ICloneable
     {
         public DiarySection() { }
 
@@ -53,6 +53,16 @@
         public string Title { get; set; } = string.Empty;
 
         public string Body { get; set; } = string.Empty;
+
+        public object Clone()
+        {
+            return new DiarySection()
+            {
+                SectionId = SectionId,
+                Title = (string)Title.Clone(),
+                Body = (string)Body.Clone()
+            };
+        }
     }
 
     public class DiarySettings

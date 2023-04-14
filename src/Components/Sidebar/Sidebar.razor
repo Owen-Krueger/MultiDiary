@@ -7,7 +7,7 @@
            Variant="DrawerVariant.Persistent"
            Width="320px"
            Height="100vh" >
-    <Calendar Dates="Diaries.Entries.Keys" />
+    <Calendar Dates="StateContainer.Diaries.Entries.Keys" />
     <MudButton Variant="Variant.Filled"
                OnClick="AddSectionAsync"
                EndIcon="@Icons.Material.Filled.Add"
@@ -34,11 +34,6 @@
 </MudDrawer>
 
 @code {
-    [Parameter]
-    public DateOnly Date { get; set; }
-    [Parameter]
-    public Diaries Diaries { get; set; }
-
     /// <summary>
     /// Subscribes to StateContainer changes.
     /// </summary>
@@ -81,7 +76,7 @@
 
         if (!result.Canceled && (bool)result.Data)
         {
-            await DiaryService.RemoveEntryAsync(Date);
+            await DiaryService.RemoveEntryAsync();
         }
     }
 

@@ -5,7 +5,7 @@
 @inject IDialogService DialogService
 
 <MudDrawerContainer>
-    <Sidebar Date="Date" Diaries="StateContainer.Diaries" />
+    <Sidebar />
     <div class="pa-4">
         <DiaryEntry />
     </div>
@@ -31,13 +31,6 @@
             ShowErrorDialog();
         }
     }
-
-    private DateOnly Date => StateContainer.SelectedDate;
-
-    /// <summary>
-    /// Returns the diary sections for the selected date.
-    /// </summary>
-    private List<DiarySection> SelectedDiarySections => StateContainer.Diaries.Entries.SingleOrDefault(x => x.Key == StateContainer.SelectedDate).Value?.DiarySections ?? new List<DiarySection>();
 
     protected void ShowGettingStartedDialog()
     {
