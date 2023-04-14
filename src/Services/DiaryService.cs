@@ -41,7 +41,17 @@ namespace MultiDiary.Services
             GetDiaries();
         }
 
-        public async Task UpsertSection(DateOnly date, DiarySection diarySection, bool newSection)
+        public async Task UpsertSectionsAsync(DateOnly date, List<DiarySection> diarySections)
+        {
+            foreach (var section in diarySections)
+            {
+                UpsertSection(date, section);
+            }
+
+            await UpdateDiariesFileAsync();
+        }
+
+        private void UpsertSection(DateOnly date, DiarySection diarySection)
         {
             var entries = stateContainer.Diaries.Entries;
             if (!entries.ContainsKey(date))
@@ -52,19 +62,17 @@ namespace MultiDiary.Services
             else
             {
                 var sections = entries[date].DiarySections;
-                if (newSection)
+                var sectionToUpdate = sections.SingleOrDefault(x => x.SectionId== diarySection.SectionId);
+                if (sectionToUpdate == null)
                 {
                     diarySection.SectionId = sections.Max(x => x.SectionId) + 1;
                     sections.Add(diarySection);
                 }
                 else
                 {
-                    var section = sections.Single(x => x.SectionId == diarySection.SectionId);
-                    section = diarySection;
+                    sectionToUpdate = diarySection;
                 }
             }
-
-            await UpdateDiariesFileAsync();
         }
 
         public async Task RemoveEntryAsync(DateOnly date)

@@ -32,6 +32,8 @@
     public DateOnly Date { get; set; }
     [Parameter]
     public DiarySection DiarySection { get; set; }
+    [Parameter]
+    public EventCallback OnSectionUpdated { get; set; }
 
     private const int debounceTimeMilleseconds = 2000;
 
@@ -44,7 +46,7 @@
     protected async Task OnTitleUpdatedAsync(string title)
     {
         DiarySection.Title = title;
-        await DiaryService.UpsertSection(Date, DiarySection, false);
+        await OnSectionUpdated.InvokeAsync();
     }
 
     /// <summary>
@@ -56,7 +58,7 @@
     protected async Task OnBodyUpdatedAsync(string body)
     {
         DiarySection.Body = body;
-        await DiaryService.UpsertSection(Date, DiarySection, false);
+        await OnSectionUpdated.InvokeAsync();
     }
 
     /// <summary>

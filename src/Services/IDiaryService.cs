@@ -9,6 +9,6 @@ namespace MultiDiary.Services
         Task RemoveDiarySectionAsync(DateOnly date, int sectionId);
         Task RemoveEntryAsync(DateOnly date);
         Task UpdateDiariesFileAsync();
-        Task UpsertSection(DateOnly date, DiarySection diarySection, bool newSection);
+        Task UpsertSectionsAsync(DateOnly date, List<DiarySection> diarySections);
     }
 }

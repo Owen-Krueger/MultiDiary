@@ -9,7 +9,7 @@
            Height="100vh" >
     <Calendar Dates="Diaries.Entries.Keys" />
     <MudButton Variant="Variant.Filled"
-               OnClick="AddSection"
+               OnClick="AddSectionAsync"
                EndIcon="@Icons.Material.Filled.Add"
                Color="Color.Primary"
                Disabled="StateContainer.Error != DiaryErrorConstants.None"
@@ -52,9 +52,9 @@
     /// The section will be given an ID of 1 if it's the first
     /// section, or whatever the largest ID is plus 1.
     /// </summary>
-    private void AddSection()
+    private async Task AddSectionAsync()
     {
-        DiaryService.UpsertSection(Date, new DiarySection(), true);
+        await DiaryService.UpsertSectionsAsync(Date, new List<DiarySection>() { new DiarySection() });
     }
 
     private void OpenPreferences()
