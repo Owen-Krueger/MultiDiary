@@ -18,8 +18,6 @@
 </div>
 
 @code {
-    private bool defaultsSet = false;
-
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
@@ -44,7 +42,6 @@
             index++;
             StateContainer.SelectedSections.Add(new DiarySection() { SectionId = index, Title = section.DefaultTitle });
         }
-        defaultsSet = true;
     }
 
     /// <summary>
