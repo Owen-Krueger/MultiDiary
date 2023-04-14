@@ -31,7 +31,7 @@
         }
         set
         {
-            StateContainer.SelectedDate = DateOnly.FromDateTime(value ?? DateTime.Today);
+            StateContainer.SelectEntry(DateOnly.FromDateTime(value ?? DateTime.Today));
         }
     }
 

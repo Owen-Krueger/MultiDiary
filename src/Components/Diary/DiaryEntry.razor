@@ -1,65 +1,55 @@
-﻿@inject IDiaryService DiaryService
+﻿@implements IDisposable
+@inject IDiaryService DiaryService
+@inject StateContainer StateContainer
 
 <div class="d-flex flex-column" style="height:96vh; overflow-x:auto;">
     <MudStack>
         <MudExpansionPanels MultiExpansion="true">
-            @if (!Sections.Any())
+            @if (!StateContainer.SelectedSections.Any())
             {
                 <MudText Align="Align.Center">No sections here yet... Click "Add Section" on the sidebar to make one!</MudText>
             }
-            @foreach(var section in Sections)
+            @foreach(var section in StateContainer.SelectedSections)
             {
-                <DiarySectionEdit Date="Date" DiarySection="section" OnSectionUpdated="() => SaveSectionChangesAsync(section)" />
+                <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" />
             }
         </MudExpansionPanels>
     </MudStack>
 </div>
 
 @code {
-    [Parameter]
-    public DateOnly Date { get; set; }
-    [Parameter]
-    public List<DiarySection> Sections { get; set; }
-    [Parameter]
-    public List<DefaultSection> DefaultSections { get; set; }
-
     private bool defaultsSet = false;
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        if (!Sections.Any() && DefaultSections.Any())
-        {
-            SetSectionsFromDefault();
-        }
+        StateContainer.OnChange += StateHasChanged;
     }
 
-    /// <summary>
-    /// Saves the changes to the section to the diary file.
-    /// If defaults were set when the sections were added, we save all the sections to the file.
-    /// This prevents default sections that haven't been edited yet from disappearing when the user
-    /// edits a different section.
-    /// </summary>
-    private async Task SaveSectionChangesAsync(DiarySection section)
+    protected override void OnAfterRender(bool firstRender)
     {
-        bool defaultsPresent = defaultsSet && Sections.Any(x => DefaultSections.Any(y => y.DefaultTitle == x.Title));
-        if (defaultsPresent)
+        if (!StateContainer.SelectedSections.Any() && StateContainer.Diaries.DefaultSections.Any())
         {
-            await DiaryService.UpsertSectionsAsync(Date, Sections);
-            defaultsPresent = false; // To prevent future updates from re-adding the defaults if they were removed.
-            return;
+            SetSectionsFromDefault();
+            StateHasChanged();
         }
-
-        await DiaryService.UpsertSectionsAsync(Date, new List<DiarySection>() { section });
     }
 
     private void SetSectionsFromDefault()
     {
         int index = 0;
-        foreach (var section in DefaultSections)
+        foreach (var section in StateContainer.Diaries.DefaultSections)
         {
             index++;
-            Sections.Add(new DiarySection() { SectionId = index, Title = section.DefaultTitle });
+            StateContainer.SelectedSections.Add(new DiarySection() { SectionId = index, Title = section.DefaultTitle });
         }
         defaultsSet = true;
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

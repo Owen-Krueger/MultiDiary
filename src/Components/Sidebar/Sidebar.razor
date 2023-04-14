@@ -54,7 +54,8 @@
     /// </summary>
     private async Task AddSectionAsync()
     {
-        await DiaryService.UpsertSectionsAsync(Date, new List<DiarySection>() { new DiarySection() });
+        StateContainer.SelectedSections.Add(new DiarySection());
+        await DiaryService.UpdateDiaryAsync();
     }
 
     private void OpenPreferences()

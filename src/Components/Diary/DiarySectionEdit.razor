@@ -1,5 +1,7 @@
-﻿@inject IDiaryService DiaryService
+﻿@implements IDisposable
+@inject IDiaryService DiaryService
 @inject IDialogService DialogService
+@inject StateContainer StateContainer
 
 <MudPaper Class="pa-2">
     <ChildContent>
@@ -41,10 +43,16 @@
     public DiarySection DiarySection { get; set; }
     [Parameter]
     public bool ReadOnlyTitle { get; set; }
-    [Parameter]
-    public EventCallback OnSectionUpdated { get; set; }
 
     private const int debounceTimeMilleseconds = 2000;
+
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
 
     /// <summary>
     /// On title text box update, update diary file.
@@ -55,7 +63,7 @@
     protected async Task OnTitleUpdatedAsync(string title)
     {
         DiarySection.Title = title;
-        await OnSectionUpdated.InvokeAsync();
+        await DiaryService.UpdateDiaryAsync();
     }
 
     /// <summary>
@@ -67,7 +75,7 @@
     protected async Task OnBodyUpdatedAsync(string body)
     {
         DiarySection.Body = body;
-        await OnSectionUpdated.InvokeAsync();
+        await DiaryService.UpdateDiaryAsync();
     }
 
     /// <summary>
@@ -75,7 +83,6 @@
     /// </summary>
     private async Task DeleteSection()
     {
-        await OnSectionUpdated.InvokeAsync(); // Save changes before deleting to make sure the state is up to date.
         var parameters = new DialogParameters();
         parameters.Add("ContentText", "Do you really want to delete this section? This process cannot be undone.");
         parameters.Add("ButtonText", "Delete");
@@ -88,7 +95,16 @@
 
         if (!result.Canceled && (bool)result.Data)
         {
-            await DiaryService.RemoveDiarySectionAsync(Date, DiarySection.SectionId);
+            StateContainer.RemoveSection(Date, DiarySection.SectionId);
+            await DiaryService.UpdateDiaryAsync();
         }
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

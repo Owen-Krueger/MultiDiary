@@ -24,6 +24,7 @@ namespace MultiDiary.Services
                     return false;
                 }
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
+                stateContainer.SelectEntry(DateOnly.FromDateTime(DateTime.Today));
                 stateContainer.Error = DiaryErrorConstants.None;
                 return true;
             }
@@ -40,6 +41,8 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
             GetDiaries();
         }
+
+        public async Task UpdateDiaryAsync() => await UpsertSectionsAsync(stateContainer.SelectedDate, stateContainer.SelectedSections);
 
         public async Task UpsertSectionsAsync(DateOnly date, List<DiarySection> diarySections)
         {
@@ -86,29 +89,7 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
         }
 
-        public async Task RemoveDiarySectionAsync(DateOnly date, int sectionId)
-        {
-            var entries = stateContainer.Diaries.Entries;
-            if (!entries.ContainsKey(date))
-            {
-                // Bad
-            }
-            var sections = entries[date].DiarySections;
-            var sectionToRemove = sections.SingleOrDefault(x => x.SectionId == sectionId);
-
-            if (sections.Count == 1 && sectionToRemove != null) // Last section being removed. Delete entry instead.
-            {
-                await RemoveEntryAsync(date);
-            }
-            else if (sectionToRemove != null)
-            {
-                sections.Remove(sectionToRemove);
-            }
-
-            await UpdateDiariesFileAsync();
-        }
-        
-        public async Task UpdateDiariesFileAsync()
+        private async Task UpdateDiariesFileAsync()
         {
             var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
             if (string.IsNullOrEmpty(filePath))

@@ -6,9 +6,7 @@ namespace MultiDiary.Services
     {
         Task CreateDiaryAsync();
         bool GetDiaries();
-        Task RemoveDiarySectionAsync(DateOnly date, int sectionId);
         Task RemoveEntryAsync(DateOnly date);
-        Task UpdateDiariesFileAsync();
-        Task UpsertSectionsAsync(DateOnly date, List<DiarySection> diarySections);
+        Task UpdateDiaryAsync();
     }
 }

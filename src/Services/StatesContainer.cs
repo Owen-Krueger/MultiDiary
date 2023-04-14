@@ -1,4 +1,5 @@
-﻿using MultiDiary.Models;
+﻿using CommunityToolkit.Maui.Layouts;
+using MultiDiary.Models;
 
 namespace MultiDiary.Services
 {
@@ -37,6 +38,36 @@ namespace MultiDiary.Services
             {
                 selectedDate = value;
                 NotifyStateChanged();
+            }
+        }
+
+        private List<DiarySection> selectedSections = new List<DiarySection>();
+
+        public List<DiarySection> SelectedSections
+        {
+            get => selectedSections;
+            set
+            {
+                selectedSections = value;
+                NotifyStateChanged();
+            }
+        }
+
+        public void SelectEntry(DateOnly date)
+        {
+            SelectedDate = date;
+            SelectedSections = Diaries.Entries.SingleOrDefault(x => x.Key == date).Value?.DiarySections ?? new List<DiarySection>();
+        }
+
+        public void RemoveSection(DateOnly date, int sectionId)
+        {
+            var selectedSection = SelectedSections.SingleOrDefault(x => x.SectionId == sectionId);
+            SelectedSections.Remove(selectedSection);
+            var entries = Diaries.Entries;
+            if (entries.TryGetValue(date, out DiaryEntry value))
+            {
+                var sectionToRemove = value.DiarySections.SingleOrDefault(x => x.SectionId == sectionId);
+                value.DiarySections.Remove(sectionToRemove);
             }
         }
 
