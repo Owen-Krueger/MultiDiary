@@ -20,8 +20,9 @@
     }
 
     /// <summary>
-    /// Sets selected date in StatesContainer to what
-    /// the user selects in the UI.
+    /// Sets selected date in StatesContainer to what the user selects in the UI.
+    /// This is needed because the calendar UI exposes a DateTime type, when we
+    /// only store a DateOnly type in the state.
     /// </summary>
     private DateTime? selectedDateTime
     {

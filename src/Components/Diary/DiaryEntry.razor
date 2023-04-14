@@ -32,7 +32,7 @@
         }
     }
 
-    private bool IsTitleReadOnly(string title) => StateContainer.Diaries.DiarySettings.ReadOnlyDefaultSectionTitles && StateContainer.Diaries.DefaultSections.Any(x => x.DefaultTitle == title);
+    private bool IsTitleReadOnly(string title) => Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false) && StateContainer.Diaries.DefaultSections.Any(x => x.DefaultTitle == title);
 
     private void SetSectionsFromDefault()
     {

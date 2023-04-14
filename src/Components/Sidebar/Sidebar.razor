@@ -53,6 +53,9 @@
         await DiaryService.UpdateDiaryAsync();
     }
 
+    /// <summary>
+    /// Opens the preferences dialog.
+    /// </summary>
     private void OpenPreferences()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };

@@ -113,7 +113,7 @@ namespace MultiDiary.Services
 
             var diaries = stateContainer.Diaries ?? new Diaries();
             diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            diaries.Metadata.LastUpdated= DateTime.UtcNow;
+            diaries.Metadata.LastUpdated = DateTime.Now;
 
             await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
             stateContainer.Diaries = diaries; // To force the UI to refresh.

@@ -10,7 +10,7 @@
     <DialogContent>
         <MudCheckBox
             Color="Color.Primary"
-            @bind-Checked="StateContainer.Diaries.DiarySettings.ReadOnlyDefaultSectionTitles" 
+            @bind-Checked="ReadOnlyDefaultSectionTitles" 
             Label="Set Default Section Titles to be Read-only" />
         @foreach (var section in StateContainer.Diaries.DefaultSections)
         {
@@ -43,6 +43,18 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private bool ReadOnlyDefaultSectionTitles
+    {
+        get
+        {
+            return Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false);
+        }
+        set
+        {
+            Preferences.Default.Set(PreferenceKeys.ReadOnlyDefaultSectionTitles, value);
+        }
+    }
 
     protected override void OnInitialized()
     {

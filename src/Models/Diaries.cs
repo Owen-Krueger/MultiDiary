@@ -9,14 +9,11 @@
                 LastUpdated = DateTime.UtcNow,
             };
             Entries = new Dictionary<DateOnly, DiaryEntry>();
-            DiarySettings = new DiarySettings();
         }
 
         public DiaryMetadata Metadata { get; set; } = new();
 
         public List<DefaultSection> DefaultSections { get; set; } = new();
-
-        public DiarySettings DiarySettings { get; set; } = new();
 
         public Dictionary<DateOnly, DiaryEntry> Entries { get; set; } = new();
     }
@@ -63,10 +60,5 @@
                 Body = (string)Body.Clone()
             };
         }
-    }
-
-    public class DiarySettings
-    {
-        public bool ReadOnlyDefaultSectionTitles { get; set; } = false;
     }
 }
