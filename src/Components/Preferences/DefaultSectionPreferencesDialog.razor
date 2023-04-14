@@ -8,6 +8,10 @@
         </MudText>
     </TitleContent>
     <DialogContent>
+        <MudCheckBox
+            Color="Color.Primary"
+            @bind-Checked="StateContainer.Diaries.DiarySettings.ReadOnlyDefaultSectionTitles" 
+            Label="Lock Section Titles" />
         @foreach (var section in StateContainer.Diaries.DefaultSections)
         {
             <div class="d-flex pa-2">

@@ -4,16 +4,23 @@
 <MudPaper Class="pa-2">
     <ChildContent>
     <div class="d-flex pa-2">
-        <MudTextField Value="DiarySection.Title"
+        @if (!ReadOnlyTitle)
+        {
+            <MudTextField Value="DiarySection.Title"
                         Label="Title"
                         DebounceInterval="debounceTimeMilleseconds"
                         T="string"
                         ValueChanged="OnTitleUpdatedAsync"
                         Lines="1" />
+        }
+        else
+        {
+            <MudText Typo="Typo.h6" Class="d-flex w-100">@DiarySection.Title</MudText>  
+        }
         <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                    aria-label="delete"
-                    OnClick="DeleteSection" 
-                    tabindex="-1" />
+                aria-label="delete"
+                OnClick="DeleteSection" 
+                tabindex="-1" />
     </div>
     <div class="pa-2">
         <MudTextField Variant="Variant.Filled"
@@ -32,6 +39,8 @@
     public DateOnly Date { get; set; }
     [Parameter]
     public DiarySection DiarySection { get; set; }
+    [Parameter]
+    public bool ReadOnlyTitle { get; set; }
     [Parameter]
     public EventCallback OnSectionUpdated { get; set; }
 
