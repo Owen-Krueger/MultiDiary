@@ -17,7 +17,11 @@
         }
         else
         {
-            <MudText Typo="Typo.h6" Class="d-flex w-100">@DiarySection.Title</MudText>  
+                <MudGrid Class="d-flex flex-column justify-center">
+                    <MudItem>
+                    <MudText>@DiarySection.Title</MudText>
+                </MudItem>
+            </MudGrid>
         }
         <MudIconButton Icon="@Icons.Material.Filled.Delete"
                 aria-label="delete"

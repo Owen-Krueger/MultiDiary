@@ -11,7 +11,7 @@
             }
             @foreach(var section in StateContainer.SelectedSections)
             {
-                <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" />
+                <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" ReadOnlyTitle="IsTitleReadOnly(section.Title)" />
             }
         </MudExpansionPanels>
     </MudStack>
@@ -33,6 +33,8 @@
             StateHasChanged();
         }
     }
+
+    private bool IsTitleReadOnly(string title) => StateContainer.Diaries.DiarySettings.ReadOnlyDefaultSectionTitles && StateContainer.Diaries.DefaultSections.Any(x => x.DefaultTitle == title);
 
     private void SetSectionsFromDefault()
     {
