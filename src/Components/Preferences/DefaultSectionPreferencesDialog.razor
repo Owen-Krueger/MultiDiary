@@ -18,7 +18,8 @@
                 <MudTextField
                     Label="Section"
                     Variant="Variant.Filled"
-                    @bind-Value="section.DefaultTitle" />
+                    @bind-Value="section.DefaultTitle"
+                    @ref="TextFieldRef" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete"
                             aria-label="delete"
                             OnClick="() => DeleteSection(section)" 
@@ -44,6 +45,11 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    private List<MudTextField<string>> textFieldRefs = new();
+    public MudTextField<string> TextFieldRef { set { textFieldRefs.Add(value); } }
+
+    private bool sectionAdded = false;
+
     private bool ReadOnlyDefaultSectionTitles
     {
         get
@@ -56,16 +62,39 @@
         }
     }
 
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
     }
 
+    /// <summary>
+    /// If a section was added before the UI refreshed, focus the keyboard
+    /// on the newly created section.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (sectionAdded)
+        {
+            await textFieldRefs.Last().FocusAsync();
+            sectionAdded = false;
+        }
+    }
+
+    /// <summary>
+    /// Add a new section text field to edit.
+    /// </summary>
     protected void AddSection()
     {
         StateContainer.Diaries.DefaultSections.Add(new DefaultSection());
+        sectionAdded = true;
     }
 
+    /// <summary>
+    /// Delete the selected text field.
+    /// </summary>
     protected void DeleteSection(DefaultSection defaultSection)
     {
         StateContainer.Diaries.DefaultSections.Remove(defaultSection);
