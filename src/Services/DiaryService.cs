@@ -97,6 +97,7 @@ namespace MultiDiary.Services
                 // Bad
             }
             entries.Remove(stateContainer.SelectedDate);
+            stateContainer.SelectedSections = new();
             await UpdateDiariesFileAsync();
         }
 

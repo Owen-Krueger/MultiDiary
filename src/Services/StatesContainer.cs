@@ -126,6 +126,8 @@ namespace MultiDiary.Services
             FirstTime = true;
         }
 
+        public void OnPreferenceChanged() => OnChange?.Invoke();
+
         /// <summary>
         /// Notifies consumers that the state has changed and UI elements should be re-rendered.
         /// </summary>

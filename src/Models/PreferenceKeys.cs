@@ -5,5 +5,7 @@
         public const string DiaryFile = "DiaryFile";
 
         public const string ReadOnlyDefaultSectionTitles = "ReadOnlyDefaultSectionTitles";
+
+        public const string SectionLineCount = "SectionLineCount";
     }
 }

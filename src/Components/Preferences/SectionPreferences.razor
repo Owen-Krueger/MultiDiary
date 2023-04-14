@@ -1,0 +1,19 @@
+﻿@inject StateContainer StateContainer
+
+<MudText><strong>Section Preferences</strong></MudText>
+<MudSlider @bind-Value="SectionLineCount" Min="1" Max="10" Color="Color.Primary">Section Line Count: @SectionLineCount.ToString()</MudSlider>
+
+@code {
+    private int SectionLineCount
+    {
+        get
+        {
+            return Preferences.Default.Get(PreferenceKeys.SectionLineCount, 5);
+        }
+        set
+        {
+            Preferences.Default.Set(PreferenceKeys.SectionLineCount, value);
+            StateContainer.OnPreferenceChanged();
+        }
+    }
+}

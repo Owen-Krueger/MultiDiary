@@ -35,7 +35,7 @@
                       DebounceInterval="debounceTimeMilleseconds"
                       T="string"
                       ValueChanged="OnBodyUpdatedAsync"
-                      Lines="5" />
+                      Lines="sectionLineCount" />
     </div>
     </ChildContent>
 </MudPaper>
@@ -49,6 +49,7 @@
     public bool ReadOnlyTitle { get; set; }
 
     private const int debounceTimeMilleseconds = 500;
+    private int sectionLineCount = 5;
 
     /// <summary>
     /// Subscribes to StateContainer changes.
@@ -56,6 +57,16 @@
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        var newSectionLineCount = Preferences.Default.Get(PreferenceKeys.SectionLineCount, 5);
+        if (sectionLineCount != newSectionLineCount)
+        {
+            sectionLineCount = newSectionLineCount;
+            StateHasChanged(); // Needed so the component properly refreshes.
+        }
     }
 
     /// <summary>
