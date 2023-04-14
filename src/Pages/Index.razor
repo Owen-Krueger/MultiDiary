@@ -12,6 +12,8 @@
 </MudDrawerContainer>
 
 @code {
+    private bool gettingStartedOpen = false;
+
     /// <summary>
     /// Subscribes to StateContainer changes.
     /// Gets diaries from file.
@@ -20,27 +22,38 @@
     {
         StateContainer.OnChange += StateHasChanged;
         DiaryService.GetDiaries();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (gettingStartedOpen) // To not re-render the Getting Started dialog if it's actively open.
+        {
+            return;
+        }
 
         string error = StateContainer.Error;
-        if (error == DiaryErrorConstants.FileNotFound)
+        if (StateContainer.FirstTime && error == DiaryErrorConstants.FileNotFound)
         {
-            ShowGettingStartedDialog();
+            await ShowGettingStartedDialogAsync();
         }
-        else if (error != DiaryErrorConstants.None)
+        else if (error != DiaryErrorConstants.FileNotFound && error != DiaryErrorConstants.None)
         {
             ShowErrorDialog();
         }
     }
 
-    protected void ShowGettingStartedDialog()
+    protected async Task ShowGettingStartedDialogAsync()
     {
+        gettingStartedOpen = true;
         var options = new DialogOptions
         {
             CloseOnEscapeKey = false,
             CloseButton = false,
             DisableBackdropClick = true
         };
-        DialogService.Show<GettingStartedDialog>("Welcome!", options);
+        var dialog = DialogService.Show<GettingStartedDialog>("Welcome!", options);
+        await dialog.Result;
+        gettingStartedOpen = false;
     }
 
     protected void ShowErrorDialog()

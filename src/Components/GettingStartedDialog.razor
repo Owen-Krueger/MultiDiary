@@ -6,7 +6,7 @@
     </TitleContent>
     <DialogContent>
         <MudText>Select a folder to create your diary file in or a folder that contains an existing "multi-diary.txt" file to use.</MudText>
-        <FilePreferences OnDiarySelected="Submit" />
+        <FilePreferences OnDiarySelected="Submit" StartingDialog="true" />
     </DialogContent>
 </MudDialog>
 
@@ -14,5 +14,4 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
 }

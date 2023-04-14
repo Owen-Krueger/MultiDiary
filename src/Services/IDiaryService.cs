@@ -23,6 +23,7 @@
         /// the state.
         /// </summary>
         Task RemoveSelectedEntryAsync();
+        void ResetDiary();
 
         /// <summary>
         /// Commits changes to the diary and saves them to

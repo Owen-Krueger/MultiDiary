@@ -4,7 +4,10 @@
 @inject IDialogService DialogService
 @inject StateContainer StateContainer
 
-<MudText><strong>Diary Location</strong></MudText>
+@if (!StartingDialog)
+{
+    <MudText><strong>Diary Location</strong></MudText>
+}
 <div class="d-flex">
     <MudTextField
         Value="filePath"
@@ -21,6 +24,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool StartingDialog { get; set; } = false;
     [Parameter]
     public EventCallback OnDiarySelected { get; set; }
 
@@ -74,6 +79,7 @@
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<SimpleDialog>("Continue", parameters, options);
         var result = await dialog.Result;
+        dialog.Close();
 
         if (!result.Canceled && (bool)result.Data)
         {

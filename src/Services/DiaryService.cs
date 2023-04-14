@@ -29,6 +29,7 @@ namespace MultiDiary.Services
                 stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
                 stateContainer.SelectEntry(DateOnly.FromDateTime(DateTime.Today));
                 stateContainer.Error = DiaryErrorConstants.None;
+                stateContainer.FirstTime = false;
                 return true;
             }
             catch (Exception)
@@ -97,6 +98,27 @@ namespace MultiDiary.Services
             }
             entries.Remove(stateContainer.SelectedDate);
             await UpdateDiariesFileAsync();
+        }
+
+        public void ResetDiary()
+        {
+            try
+            {
+                var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    // Bad
+                    return;
+                }
+                File.Delete(filePath);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            Preferences.Clear();
+            stateContainer.ResetState(); // To bring the user back to the starting page
         }
 
         /// <summary>

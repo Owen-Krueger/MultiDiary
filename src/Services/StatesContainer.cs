@@ -7,6 +7,18 @@ namespace MultiDiary.Services
     /// </summary>
     public class StateContainer
     {
+        private bool firstTime = true;
+
+        public bool FirstTime
+        {
+            get => firstTime;
+            set
+            {
+                firstTime = value;
+                NotifyStateChanged();
+            }
+        }
+
         private string error = DiaryErrorConstants.None;
 
         /// <summary>
@@ -100,6 +112,18 @@ namespace MultiDiary.Services
                 var sectionToRemove = value.DiarySections.SingleOrDefault(x => x.SectionId == sectionId);
                 value.DiarySections.Remove(sectionToRemove);
             }
+        }
+
+        /// <summary>
+        /// Resets the state of the app to factory settings.
+        /// </summary>
+        public void ResetState()
+        {
+            Diaries = new Diaries();
+            SelectedDate = DateOnly.FromDateTime(DateTime.Today);
+            SelectedSections = new List<DiarySection>();
+            Error = DiaryErrorConstants.FileNotFound;
+            FirstTime = true;
         }
 
         /// <summary>

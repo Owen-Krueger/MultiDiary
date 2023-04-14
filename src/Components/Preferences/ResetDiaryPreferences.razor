@@ -1,0 +1,34 @@
+﻿@inject IDialogService DialogService
+@inject IDiaryService DiaryService
+
+<MudText><strong>Reset Diary</strong></MudText>
+<MudButton Variant="Variant.Filled"
+           Color="Color.Error"
+           OnClick="ResetDiaryAsync">
+    Reset Diary
+</MudButton>
+
+@code {
+    [Parameter]
+    public EventCallback OnDiaryReset { get; set; }
+
+    protected async Task ResetDiaryAsync()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to reset your diary? This will delete all diary entries and preferences. This process cannot be undone.");
+        parameters.Add("ButtonText", "Reset");
+        parameters.Add("Color", Color.Error);
+        parameters.Add("ShowCancelButton", true);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<SimpleDialog>("Reset", parameters, options);
+        var result = await dialog.Result;
+        dialog.Close();
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            DiaryService.ResetDiary();
+            await OnDiaryReset.InvokeAsync();
+        }
+    }
+}
