@@ -1,13 +1,17 @@
-﻿using CommunityToolkit.Maui.Layouts;
-using MudBlazor;
-using MultiDiary.Models;
+﻿using MultiDiary.Models;
 
 namespace MultiDiary.Services
 {
+    /// <summary>
+    /// Manages the state of the application.
+    /// </summary>
     public class StateContainer
     {
         private string error = DiaryErrorConstants.None;
 
+        /// <summary>
+        /// Error text if an error was encountered.
+        /// </summary>
         public string Error
         {
             get => error;
@@ -20,6 +24,9 @@ namespace MultiDiary.Services
 
         private Diaries diaries = new();
 
+        /// <summary>
+        /// The diaries from file.
+        /// </summary>
         public Diaries Diaries
         {
             get => diaries;
@@ -32,6 +39,9 @@ namespace MultiDiary.Services
 
         private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
 
+        /// <summary>
+        /// The date currently selected in the UI.
+        /// </summary>
         public DateOnly SelectedDate
         {
             get => selectedDate;
@@ -42,8 +52,11 @@ namespace MultiDiary.Services
             }
         }
 
-        private List<DiarySection> selectedSections = new List<DiarySection>();
+        private List<DiarySection> selectedSections = new();
 
+        /// <summary>
+        /// The sections currently selected in the UI.
+        /// </summary>
         public List<DiarySection> SelectedSections
         {
             get => selectedSections;
@@ -71,6 +84,12 @@ namespace MultiDiary.Services
             });
         }
 
+        /// <summary>
+        /// Removes the section from being currently worked on (SelectedSections)
+        /// and attempts to remove from the diary if it's been previously saved (DiarySections)
+        /// </summary>
+        /// <param name="date">Date of the entry to remove the section from.</param>
+        /// <param name="sectionId">The unique identifier of the section to remove.</param>
         public void RemoveSection(DateOnly date, int sectionId)
         {
             var selectedSection = SelectedSections.SingleOrDefault(x => x.SectionId == sectionId);
@@ -83,8 +102,14 @@ namespace MultiDiary.Services
             }
         }
 
+        /// <summary>
+        /// Notifies consumers that the state has changed and UI elements should be re-rendered.
+        /// </summary>
         public event Action OnChange;
 
+        /// <summary>
+        /// Triggers the OnChange event to notify consumers they should re-render UI elements.
+        /// </summary>
         private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }

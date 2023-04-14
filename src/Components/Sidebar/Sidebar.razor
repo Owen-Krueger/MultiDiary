@@ -76,7 +76,7 @@
 
         if (!result.Canceled && (bool)result.Data)
         {
-            await DiaryService.RemoveEntryAsync();
+            await DiaryService.RemoveSelectedEntryAsync();
         }
     }
 

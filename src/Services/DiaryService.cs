@@ -3,15 +3,18 @@ using Newtonsoft.Json;
 
 namespace MultiDiary.Services
 {
+    /// <inheritdoc />
     public class DiaryService : IDiaryService
     {
         private readonly StateContainer stateContainer;
 
+        /// <summary> Constructor. </summary>
         public DiaryService(StateContainer stateContainer)
         {
             this.stateContainer = stateContainer;
         }
 
+        /// <inheritdoc />
         public bool GetDiaries()
         {
             try
@@ -35,6 +38,7 @@ namespace MultiDiary.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task CreateDiaryAsync()
         {
             stateContainer.Diaries = new Diaries();
@@ -42,18 +46,23 @@ namespace MultiDiary.Services
             GetDiaries();
         }
 
-        public async Task UpdateDiaryAsync() => await UpsertSectionsAsync(stateContainer.SelectedDate, stateContainer.SelectedSections);
-
-        public async Task UpsertSectionsAsync(DateOnly date, List<DiarySection> diarySections)
+        /// <inheritdoc />
+        public async Task UpdateDiaryAsync()
         {
-            foreach (var section in diarySections)
+            foreach (var section in stateContainer.SelectedSections)
             {
-                UpsertSection(date, section);
+                UpsertSection(stateContainer.SelectedDate, section);
             }
 
             await UpdateDiariesFileAsync();
         }
 
+        /// <summary>
+        /// Inserts or updates the section, based on if the entry or section currently
+        /// exists in the diary.
+        /// </summary>
+        /// <param name="date">Date to add/update the section.</param>
+        /// <param name="diarySection">The section contents to update with.</param>
         private void UpsertSection(DateOnly date, DiarySection diarySection)
         {
             var entries = stateContainer.Diaries.Entries;
@@ -78,7 +87,8 @@ namespace MultiDiary.Services
             }
         }
 
-        public async Task RemoveEntryAsync()
+        /// <inheritdoc />
+        public async Task RemoveSelectedEntryAsync()
         {
             var entries = stateContainer.Diaries.Entries;
             if (!entries.ContainsKey(stateContainer.SelectedDate))
@@ -89,6 +99,9 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
         }
 
+        /// <summary>
+        /// Updates the diary file with any new changes.
+        /// </summary>
         private async Task UpdateDiariesFileAsync()
         {
             var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
