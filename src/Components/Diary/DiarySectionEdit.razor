@@ -66,6 +66,7 @@
     /// </summary>
     private async Task DeleteSection()
     {
+        await OnSectionUpdated.InvokeAsync(); // Save changes before deleting to make sure the state is up to date.
         var parameters = new DialogParameters();
         parameters.Add("ContentText", "Do you really want to delete this section? This process cannot be undone.");
         parameters.Add("ButtonText", "Delete");

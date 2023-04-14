@@ -95,7 +95,12 @@ namespace MultiDiary.Services
             }
             var sections = entries[date].DiarySections;
             var sectionToRemove = sections.SingleOrDefault(x => x.SectionId == sectionId);
-            if (sectionToRemove != null)
+
+            if (sections.Count == 1 && sectionToRemove != null) // Last section being removed. Delete entry instead.
+            {
+                await RemoveEntryAsync(date);
+            }
+            else if (sectionToRemove != null)
             {
                 sections.Remove(sectionToRemove);
             }
