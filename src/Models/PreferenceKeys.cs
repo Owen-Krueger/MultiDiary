@@ -8,6 +8,8 @@
 
         public const string SectionLineCount = "SectionLineCount";
 
+        public const string ThemeUseSystemTheme = "ThemeUseSystemTheme";
+
         public const string ThemeIsDarkMode = "ThemeIsDarkMode";
     }
 }

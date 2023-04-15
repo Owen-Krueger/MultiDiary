@@ -4,7 +4,7 @@
 @inject IDiaryService DiaryService
 @inject IDialogService DialogService
 
-<MudThemeProvider IsDarkMode="isDarkMode" />
+<MudThemeProvider @ref="mudThemeProvider" IsDarkMode="isDarkMode" />
 <MudDrawerContainer>
     <Sidebar />
     <div class="pa-4">
@@ -14,6 +14,7 @@
 
 @code {
     private bool gettingStartedOpen = false;
+    private MudThemeProvider mudThemeProvider;
     private bool isDarkMode = true;
 
     /// <summary>
@@ -32,11 +33,7 @@
         {
             return;
         }
-
-        if (PreferenceUtilities.GetUpdatedPreference(ref isDarkMode, PreferenceKeys.ThemeIsDarkMode))
-        {
-            StateHasChanged(); // Needed so the component properly refreshes.
-        }
+        await SetThemeAsync();
 
         string error = StateContainer.Error;
         if (StateContainer.FirstTime && error == DiaryErrorConstants.FileNotFound)
@@ -71,6 +68,32 @@
         parameters.Add("Color", Color.Error);
 
         var dialog = DialogService.Show<SimpleDialog>("Error!", parameters);
+    }
+
+    protected async Task SetThemeAsync()
+    {
+        bool newIsDarkMode;
+        bool isDarkModePreference = Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);
+        var useSystemTheme = Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
+        if (useSystemTheme)
+        {
+            newIsDarkMode = await mudThemeProvider.GetSystemPreference();
+
+            if (isDarkModePreference != newIsDarkMode)
+            {
+                Preferences.Default.Set(PreferenceKeys.ThemeIsDarkMode, newIsDarkMode);
+            }
+        }
+        else
+        {
+            newIsDarkMode = isDarkModePreference;
+        }
+
+        if (newIsDarkMode != isDarkMode)
+        {
+            isDarkMode = newIsDarkMode;
+            StateHasChanged();
+        }
     }
 
     /// <summary>

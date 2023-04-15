@@ -4,9 +4,20 @@
 
 <MudGrid Class="d-flex">
     <MudItem>
+        <MudSwitch @bind-Checked="@UseSystemTheme" Color="Color.Primary" />
+    </MudItem>
+    <MudItem Class="d-flex flex-column justify-center">
+        <MudText>Use System Theme</MudText>
+    </MudItem>
+</MudGrid>
+<MudGrid Class="d-flex">
+    <MudItem>
         <MudToggleIconButton @bind-Toggled="@IsDarkMode"
-                             Icon="@Icons.Material.Filled.WbSunny" Color="@Color.Primary" Title="Light Mode"
-                             ToggledIcon="@Icons.Material.Filled.ModeNight" ToggledColor="@Color.Primary" ToggledTitle="Dark Mode"/>
+                             Icon="@Icons.Material.Filled.WbSunny"
+                             Color="@Color.Primary" Title="Light Mode"
+                             ToggledIcon="@Icons.Material.Filled.ModeNight"
+                             ToggledColor="@Color.Primary" 
+                             Disabled="UseSystemTheme" />
     </MudItem>
     <MudItem Class="d-flex flex-column justify-center">
         <MudText>@(IsDarkMode ? "Dark Mode" : "Light Mode")</MudText>
@@ -14,6 +25,19 @@
 </MudGrid>
 
 @code {
+    private bool UseSystemTheme
+    {
+        get
+        {
+            return Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
+        }
+        set
+        {
+            Preferences.Default.Set(PreferenceKeys.ThemeUseSystemTheme, value);
+            StateContainer.OnPreferenceChanged();
+        }
+    }
+
     private bool IsDarkMode
     {
         get
