@@ -2,6 +2,7 @@
 @inject IDiaryService DiaryService
 @inject IDialogService DialogService
 @inject StateContainer StateContainer
+@inject IPreferences Preferences
 
 <MudPaper Class="pa-2">
     <ChildContent>
@@ -64,7 +65,7 @@
     /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
-        if (PreferenceUtilities.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount))
+        if (Preferences.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount))
         {
             StateHasChanged(); // Needed so the component properly refreshes.
         }

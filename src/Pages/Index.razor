@@ -3,6 +3,7 @@
 @inject StateContainer StateContainer
 @inject IDiaryService DiaryService
 @inject IDialogService DialogService
+@inject IPreferences Preferences
 
 <MudThemeProvider @ref="mudThemeProvider" IsDarkMode="isDarkMode" />
 <MudDrawerContainer>
@@ -86,15 +87,15 @@
     protected async Task SetThemeAsync()
     {
         bool newIsDarkMode;
-        bool isDarkModePreference = Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);
-        var useSystemTheme = Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
+        bool isDarkModePreference = Preferences.Get(PreferenceKeys.ThemeIsDarkMode, true);
+        var useSystemTheme = Preferences.Get(PreferenceKeys.ThemeUseSystemTheme, true);
         if (useSystemTheme)
         {
             newIsDarkMode = await mudThemeProvider.GetSystemPreference();
 
             if (isDarkModePreference != newIsDarkMode)
             {
-                Preferences.Default.Set(PreferenceKeys.ThemeIsDarkMode, newIsDarkMode);
+                Preferences.Set(PreferenceKeys.ThemeIsDarkMode, newIsDarkMode);
             }
         }
         else

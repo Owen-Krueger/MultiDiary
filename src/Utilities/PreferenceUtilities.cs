@@ -12,9 +12,9 @@
         /// <param name="currentValue">Current value of the property being checked. Will be updated if preference has changed.</param>
         /// <param name="preferenceKey">Key for the preference to check.</param>
         /// <returns>True if the preference has been updated.</returns>
-        public static bool GetUpdatedPreference<TProperty>(ref TProperty currentValue, string preferenceKey)
+        public static bool GetUpdatedPreference<TProperty>(this IPreferences preferences, ref TProperty currentValue, string preferenceKey)
         {
-            var newValue = Preferences.Default.Get(preferenceKey, currentValue);
+            var newValue = preferences.Get(preferenceKey, currentValue);
             if (!currentValue.Equals(newValue))
             {
                 currentValue = newValue;

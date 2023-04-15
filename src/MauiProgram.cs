@@ -29,6 +29,7 @@ public static class MauiProgram
         builder.Services.AddMudServices();
 		builder.Services.AddSingleton(FolderPicker.Default);
         builder.Services.AddSingleton<StateContainer>();
+		builder.Services.AddSingleton(Preferences.Default);
 		builder.Services.AddTransient<IDiaryService, DiaryService>();
 
 		return builder.Build();
