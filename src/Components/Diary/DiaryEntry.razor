@@ -25,7 +25,7 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (!StateContainer.SelectedSections.Any() && StateContainer.Diaries.DefaultSections.Any())
+         if (!StateContainer.SelectedSections.Any() && StateContainer.Diaries.DefaultSections.Any())
         {
             SetSectionsFromDefault();
             StateHasChanged();

@@ -1,0 +1,29 @@
+﻿@inject StateContainer StateContainer
+
+<MudText><strong>Theme Preferences</strong></MudText>
+
+<MudGrid Class="d-flex">
+    <MudItem>
+        <MudToggleIconButton @bind-Toggled="@IsDarkMode"
+                             Icon="@Icons.Material.Filled.WbSunny" Color="@Color.Primary" Title="Light Mode"
+                             ToggledIcon="@Icons.Material.Filled.ModeNight" ToggledColor="@Color.Primary" ToggledTitle="Dark Mode"/>
+    </MudItem>
+    <MudItem Class="d-flex flex-column justify-center">
+        <MudText>@(IsDarkMode ? "Dark Mode" : "Light Mode")</MudText>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private bool IsDarkMode
+    {
+        get
+        {
+            return Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);
+        }
+        set
+        {
+            Preferences.Default.Set(PreferenceKeys.ThemeIsDarkMode, value);
+            StateContainer.OnPreferenceChanged();
+        }
+    }
+}

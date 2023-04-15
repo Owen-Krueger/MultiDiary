@@ -61,10 +61,8 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        var newSectionLineCount = Preferences.Default.Get(PreferenceKeys.SectionLineCount, 5);
-        if (sectionLineCount != newSectionLineCount)
+        if (PreferenceUtilities.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount))
         {
-            sectionLineCount = newSectionLineCount;
             StateHasChanged(); // Needed so the component properly refreshes.
         }
     }

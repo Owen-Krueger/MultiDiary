@@ -7,5 +7,7 @@
         public const string ReadOnlyDefaultSectionTitles = "ReadOnlyDefaultSectionTitles";
 
         public const string SectionLineCount = "SectionLineCount";
+
+        public const string ThemeIsDarkMode = "ThemeIsDarkMode";
     }
 }

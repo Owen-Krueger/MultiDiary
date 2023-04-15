@@ -4,6 +4,7 @@
 @inject IDiaryService DiaryService
 @inject IDialogService DialogService
 
+<MudThemeProvider IsDarkMode="isDarkMode" />
 <MudDrawerContainer>
     <Sidebar />
     <div class="pa-4">
@@ -13,6 +14,7 @@
 
 @code {
     private bool gettingStartedOpen = false;
+    private bool isDarkMode = true;
 
     /// <summary>
     /// Subscribes to StateContainer changes.
@@ -29,6 +31,11 @@
         if (gettingStartedOpen) // To not re-render the Getting Started dialog if it's actively open.
         {
             return;
+        }
+
+        if (PreferenceUtilities.GetUpdatedPreference(ref isDarkMode, PreferenceKeys.ThemeIsDarkMode))
+        {
+            StateHasChanged(); // Needed so the component properly refreshes.
         }
 
         string error = StateContainer.Error;
