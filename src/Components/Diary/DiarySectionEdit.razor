@@ -59,6 +59,9 @@
         StateContainer.OnChange += StateHasChanged;
     }
 
+    /// <summary>
+    /// Re-renders UI if dependencies have changed.
+    /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
         if (PreferenceUtilities.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount))

@@ -18,22 +18,37 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
     }
 
+    /// <summary>
+    /// Re-renders UI if dependencies have changed.
+    /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
-         if (!StateContainer.SelectedSections.Any() && StateContainer.Diaries.DefaultSections.Any())
+        if (!StateContainer.SelectedSections.Any() && StateContainer.Diaries.DefaultSections.Any())
         {
             SetSectionsFromDefault();
             StateHasChanged();
         }
     }
 
+    /// <summary>
+    /// Determines if title text box should be read-only due to preferences set and
+    /// text matches a default section.
+    /// </summary>
+    /// <param name="title">Title textbox content string to check.</param>
+    /// <returns>True if textbox should be set as read-only.</returns>
     private bool IsTitleReadOnly(string title) => Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false) && StateContainer.Diaries.DefaultSections.Any(x => x.DefaultTitle == title);
 
+    /// <summary>
+    /// Sets section textboxes if default sections set and entry is new.
+    /// </summary>
     private void SetSectionsFromDefault()
     {
         int index = 0;

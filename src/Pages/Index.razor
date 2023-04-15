@@ -27,6 +27,9 @@
         DiaryService.GetDiaries();
     }
 
+    /// <summary>
+    /// Re-renders UI if dependencies have changed.
+    /// </summary>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (gettingStartedOpen) // To not re-render the Getting Started dialog if it's actively open.
@@ -46,6 +49,10 @@
         }
     }
 
+    /// <summary>
+    /// Shows a dialog with getting started information if this is the first time a user
+    /// opens the app.
+    /// </summary>
     protected async Task ShowGettingStartedDialogAsync()
     {
         gettingStartedOpen = true;
@@ -60,6 +67,9 @@
         gettingStartedOpen = false;
     }
 
+    /// <summary>
+    /// Shows a dialog displaying an error if one has occurred.
+    /// </summary>
     protected void ShowErrorDialog()
     {
         var parameters = new DialogParameters();
@@ -70,6 +80,9 @@
         var dialog = DialogService.Show<SimpleDialog>("Error!", parameters);
     }
 
+    /// <summary>
+    /// Gets the theme either from the system or the preference, depending on preferences set.
+    /// </summary>
     protected async Task SetThemeAsync()
     {
         bool newIsDarkMode;
