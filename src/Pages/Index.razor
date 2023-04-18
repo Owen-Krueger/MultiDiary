@@ -6,12 +6,7 @@
 @inject IPreferences Preferences
 
 <MudThemeProvider @ref="mudThemeProvider" IsDarkMode="isDarkMode" />
-<MudDrawerContainer>
-    <Sidebar />
-    <div class="pa-4">
-        <DiaryEntry />
-    </div>
-</MudDrawerContainer>
+<DiaryEntry />
 
 @code {
     private bool gettingStartedOpen = false;

@@ -3,35 +3,30 @@
 @inject IDialogService DialogService
 @inject StateContainer StateContainer
 
-<MudDrawer Open="true"
-           Variant="DrawerVariant.Persistent"
-           Width="320px"
-           Height="100vh" >
-    <Calendar Dates="StateContainer.Diaries.Entries.Keys" />
-    <MudButton Variant="Variant.Filled"
-               OnClick="AddSectionAsync"
-               EndIcon="@Icons.Material.Filled.Add"
-               Color="Color.Primary"
-               Disabled="StateContainer.Error != DiaryErrorConstants.None"
-               Class="ma-2"
-               accesskey="N">
-        Add Section
-    </MudButton>
-    <MudButton Variant="Variant.Filled"
-               OnClick="DeleteEntry"
-               EndIcon="@Icons.Material.Filled.Delete"
-               Color="Color.Error"
-               Disabled="StateContainer.Error != DiaryErrorConstants.None"
-               Class="ma-2">
-        Remove Entry
-    </MudButton>
-    <div class="settings">
-        <MudFab StartIcon="@Icons.Material.Filled.Settings"
-                Label="Settings"
-                OnClick="OpenPreferences"
-                tabindex="-1" />
-    </div>
-</MudDrawer>
+<Calendar Dates="StateContainer.Diaries.Entries.Keys" />
+<MudButton Variant="Variant.Filled"
+            OnClick="AddSectionAsync"
+            EndIcon="@Icons.Material.Filled.Add"
+            Color="Color.Primary"
+            Disabled="StateContainer.Error != DiaryErrorConstants.None"
+            Class="ma-2"
+            accesskey="N">
+    Add Section
+</MudButton>
+<MudButton Variant="Variant.Filled"
+            OnClick="DeleteEntry"
+            EndIcon="@Icons.Material.Filled.Delete"
+            Color="Color.Error"
+            Disabled="StateContainer.Error != DiaryErrorConstants.None"
+            Class="ma-2">
+    Remove Entry
+</MudButton>
+<div class="settings">
+    <MudFab StartIcon="@Icons.Material.Filled.Settings"
+            Label="Settings"
+            OnClick="OpenPreferences"
+            tabindex="-1" />
+</div>
 
 @code {
     /// <summary>

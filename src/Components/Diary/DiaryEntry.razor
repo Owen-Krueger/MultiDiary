@@ -2,7 +2,7 @@
 @inject IDiaryService DiaryService
 @inject StateContainer StateContainer
 
-<div class="d-flex flex-column" style="height:96vh; overflow-x:auto;">
+<div class="d-flex flex-column pa-4" style="height:94vh; overflow-x:auto;">
     <MudStack>
         <MudExpansionPanels MultiExpansion="true">
             @if (!StateContainer.SelectedSections.Any())
