@@ -1,4 +1,5 @@
-﻿using MultiDiary.Models;
+﻿using MudBlazor;
+using MultiDiary.Models;
 using Newtonsoft.Json;
 
 namespace MultiDiary.Services
@@ -9,13 +10,15 @@ namespace MultiDiary.Services
         private readonly StateContainer stateContainer;
         private readonly IPreferences preferences;
         private readonly System.IO.Abstractions.IFileSystem fileSystem;
+        private readonly ISnackbar snackbar;
 
         /// <summary> Constructor. </summary>
-        public DiaryService(StateContainer stateContainer, IPreferences preferences, System.IO.Abstractions.IFileSystem fileSystem)
+        public DiaryService(StateContainer stateContainer, IPreferences preferences, System.IO.Abstractions.IFileSystem fileSystem, ISnackbar snackbar)
         {
             this.stateContainer = stateContainer;
             this.preferences = preferences;
             this.fileSystem = fileSystem;
+            this.snackbar = snackbar;
         }
 
         /// <inheritdoc />
@@ -144,6 +147,7 @@ namespace MultiDiary.Services
 
             await fileSystem.File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
             stateContainer.Diaries = diaries; // To force the UI to refresh.
+            snackbar.Add("Changes saved", Severity.Success);
         }
     }
 }

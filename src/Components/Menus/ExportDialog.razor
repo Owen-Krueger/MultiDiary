@@ -59,7 +59,7 @@
     {
         string exportText = DiarySectionsToString(StateContainer.SelectedSections);
         await Clipboard.Default.SetTextAsync(exportText);
-        Snackbar.Add("Entry exported");
+        Snackbar.Add("Entry exported", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
 

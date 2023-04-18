@@ -29,7 +29,7 @@ public static class MauiProgram
 
         builder.Services.AddMudServices(config =>
 		{
-			config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
+			config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
 		});
         builder.Services.AddScoped<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
         builder.Services.AddSingleton(FolderPicker.Default);
