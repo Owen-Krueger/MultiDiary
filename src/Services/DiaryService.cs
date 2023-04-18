@@ -7,11 +7,15 @@ namespace MultiDiary.Services
     public class DiaryService : IDiaryService
     {
         private readonly StateContainer stateContainer;
+        private readonly IPreferences preferences;
+        private readonly System.IO.Abstractions.IFileSystem fileSystem;
 
         /// <summary> Constructor. </summary>
-        public DiaryService(StateContainer stateContainer)
+        public DiaryService(StateContainer stateContainer, IPreferences preferences, System.IO.Abstractions.IFileSystem fileSystem)
         {
             this.stateContainer = stateContainer;
+            this.preferences = preferences;
+            this.fileSystem = fileSystem;
         }
 
         /// <inheritdoc />
@@ -19,14 +23,14 @@ namespace MultiDiary.Services
         {
             try
             {
-                var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
+                var filePath = preferences.Get(PreferenceKeys.DiaryFile, string.Empty);
 
-                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                if (string.IsNullOrEmpty(filePath) || !fileSystem.File.Exists(filePath))
                 {
                     stateContainer.Error = DiaryErrorConstants.FileNotFound;
                     return false;
                 }
-                stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(File.ReadAllText(filePath));
+                stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(fileSystem.File.ReadAllText(filePath));
                 stateContainer.SelectEntry(DateOnly.FromDateTime(DateTime.Today));
                 stateContainer.Error = DiaryErrorConstants.None;
                 stateContainer.FirstTime = false;
@@ -105,20 +109,20 @@ namespace MultiDiary.Services
         {
             try
             {
-                var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
+                var filePath = preferences.Get(PreferenceKeys.DiaryFile, string.Empty);
                 if (string.IsNullOrEmpty(filePath))
                 {
                     // Bad
                     return;
                 }
-                File.Delete(filePath);
+                fileSystem.File.Delete(filePath);
             }
             catch (Exception)
             {
 
             }
 
-            Preferences.Clear();
+            preferences.Clear();
             stateContainer.ResetState(); // To bring the user back to the starting page
         }
 
@@ -127,7 +131,7 @@ namespace MultiDiary.Services
         /// </summary>
         private async Task UpdateDiariesFileAsync()
         {
-            var filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
+            var filePath = preferences.Get(PreferenceKeys.DiaryFile, string.Empty);
             if (string.IsNullOrEmpty(filePath))
             {
                 // Bad
@@ -138,7 +142,7 @@ namespace MultiDiary.Services
             diaries.Entries = diaries.Entries.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             diaries.Metadata.LastUpdated = DateTime.Now;
 
-            await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
+            await fileSystem.File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
             stateContainer.Diaries = diaries; // To force the UI to refresh.
         }
     }

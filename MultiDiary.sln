@@ -6,6 +6,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{565A03D7-304
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDiary", "src\MultiDiary.csproj", "{E8F4E54A-420F-44AA-8898-2D3334B6C3F3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{42A2200F-123C-4130-8E2F-CECDF9765158}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDiary.Tests", "tests\MultiDiary.Tests.csproj", "{7610E48C-AE3F-404D-B888-B74B4C7E6F09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,12 +22,17 @@ Global
 		{E8F4E54A-420F-44AA-8898-2D3334B6C3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8F4E54A-420F-44AA-8898-2D3334B6C3F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8F4E54A-420F-44AA-8898-2D3334B6C3F3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7610E48C-AE3F-404D-B888-B74B4C7E6F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7610E48C-AE3F-404D-B888-B74B4C7E6F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7610E48C-AE3F-404D-B888-B74B4C7E6F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7610E48C-AE3F-404D-B888-B74B4C7E6F09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E8F4E54A-420F-44AA-8898-2D3334B6C3F3} = {565A03D7-3049-422E-9F9A-6BBF2383ABBF}
+		{7610E48C-AE3F-404D-B888-B74B4C7E6F09} = {42A2200F-123C-4130-8E2F-CECDF9765158}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D64A10E3-F6B0-4A5D-9B30-181BC8CDFBE6}
