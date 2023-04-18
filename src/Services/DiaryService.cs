@@ -79,15 +79,15 @@ namespace MultiDiary.Services
             else
             {
                 var sections = entries[date].DiarySections;
-                var sectionToUpdate = sections.SingleOrDefault(x => x.SectionId== diarySection.SectionId);
-                if (sectionToUpdate == null)
+                var sectionIndex = sections.FindIndex(x => x.SectionId == diarySection.SectionId);
+                if (sectionIndex == -1)
                 {
                     diarySection.SectionId = sections.Max(x => x.SectionId) + 1;
                     sections.Add(diarySection);
                 }
                 else
                 {
-                    sectionToUpdate = diarySection;
+                    sections[sectionIndex] = diarySection;
                 }
             }
         }
