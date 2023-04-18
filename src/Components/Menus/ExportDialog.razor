@@ -1,0 +1,88 @@
+﻿@using System.Text;
+@implements IDisposable
+@inject StateContainer StateContainer
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.ArrowOutward" Class="mr-3" /> Export
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="d-flex flex-column gap-4">
+            <MudSelect T="ExportSelection"
+                @bind-Value="exportSelection"
+                Label="Selection">
+                <MudSelectItem Value="ExportSelection.CurrentEntry">Current Entry</MudSelectItem>
+                <MudSelectItem Value="ExportSelection.AllEntries">All Entries</MudSelectItem>
+            </MudSelect>
+            <MudSelect T="ExportType" Label="Type">
+                <MudSelectItem Value="ExportType.Clipboard">Clipboard</MudSelectItem>
+                <MudSelectItem Value="ExportType.PDF">PDF</MudSelectItem>
+            </MudSelect>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ExportAsync">Export</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private ExportSelection exportSelection;
+    private ExportType exportType;
+
+    private enum ExportSelection
+    {
+        CurrentEntry,
+        AllEntries
+    }
+
+    private enum ExportType
+    {
+        Clipboard,
+        PDF
+    }
+
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    protected async Task ExportAsync()
+    {
+        string exportText = DiarySectionsToString(StateContainer.SelectedSections);
+        await Clipboard.Default.SetTextAsync(exportText);
+        Snackbar.Add("Entry exported");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private string DiarySectionsToString(List<DiarySection> sections)
+    {
+        var stringBuilder = new StringBuilder();
+        foreach (var section in sections)
+        {
+            stringBuilder.AppendLine($"{section.Title}:");
+            stringBuilder.AppendLine(section.Body);
+        }
+
+        return stringBuilder.ToString();
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+}
+

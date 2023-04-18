@@ -4,12 +4,13 @@
     Icon="@Icons.Material.Filled.MoreVert" 
     Color="Color.Inherit" >
     <MudMenuItem
-        Icon="@Icons.Material.Filled.ArrowOutward">
+        Icon="@Icons.Material.Filled.ArrowOutward"
+        OnClick="OpenDialog<ExportDialog>">
         Export
     </MudMenuItem>
     <MudMenuItem
         Icon="@Icons.Material.Filled.Settings"
-        OnClick="OpenPreferences">
+        OnClick="OpenDialog<PreferencesDialog>">
         Settings
     </MudMenuItem>
 </MudMenu>
@@ -18,9 +19,10 @@
     /// <summary>
     /// Opens the preferences dialog.
     /// </summary>
-    private void OpenPreferences()
+    private void OpenDialog<TDialog>()
+    where TDialog : ComponentBase
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
-        DialogService.Show<PreferencesDialog>("Preferences", options);
+        DialogService.Show<TDialog>("Preferences", options);
     }
 }
