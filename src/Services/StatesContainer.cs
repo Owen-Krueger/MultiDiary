@@ -107,7 +107,7 @@ namespace MultiDiary.Services
             var selectedSection = SelectedSections.SingleOrDefault(x => x.SectionId == sectionId);
             SelectedSections.Remove(selectedSection);
             var entries = Diaries.Entries;
-            if (entries.TryGetValue(date, out DiaryEntry value))
+            if (!entries.TryGetValue(date, out DiaryEntry value)) return;
             {
                 var sectionToRemove = value.DiarySections.SingleOrDefault(x => x.SectionId == sectionId);
                 value.DiarySections.Remove(sectionToRemove);

@@ -15,12 +15,9 @@
         public static bool GetUpdatedPreference<TProperty>(this IPreferences preferences, ref TProperty currentValue, string preferenceKey)
         {
             var newValue = preferences.Get(preferenceKey, currentValue);
-            if (!currentValue.Equals(newValue))
-            {
-                currentValue = newValue;
-                return true;
-            }
-            return false;
+            if (currentValue.Equals(newValue)) return false;
+            currentValue = newValue;
+            return true;
         }
     }
 }

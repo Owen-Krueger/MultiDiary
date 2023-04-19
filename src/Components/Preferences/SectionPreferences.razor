@@ -6,10 +6,7 @@
 @code {
     private int SectionLineCount
     {
-        get
-        {
-            return Preferences.Default.Get(PreferenceKeys.SectionLineCount, 5);
-        }
+        get => Preferences.Default.Get(PreferenceKeys.SectionLineCount, 5);
         set
         {
             Preferences.Default.Set(PreferenceKeys.SectionLineCount, value);

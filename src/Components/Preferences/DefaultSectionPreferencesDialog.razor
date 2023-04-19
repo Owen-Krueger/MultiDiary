@@ -46,20 +46,14 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     private List<MudTextField<string>> textFieldRefs = new();
-    public MudTextField<string> TextFieldRef { set { textFieldRefs.Add(value); } }
+    public MudTextField<string> TextFieldRef { set => textFieldRefs.Add(value); }
 
     private bool sectionAdded = false;
 
     private bool ReadOnlyDefaultSectionTitles
     {
-        get
-        {
-            return Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false);
-        }
-        set
-        {
-            Preferences.Default.Set(PreferenceKeys.ReadOnlyDefaultSectionTitles, value);
-        }
+        get => Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false);
+        set => Preferences.Default.Set(PreferenceKeys.ReadOnlyDefaultSectionTitles, value);
     }
 
     /// <summary>
@@ -110,6 +104,4 @@
     {
         StateContainer.OnChange -= StateHasChanged;
     }
-
 }
-

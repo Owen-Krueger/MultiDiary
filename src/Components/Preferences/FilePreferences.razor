@@ -37,16 +37,15 @@
         filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
     }
 
-    protected async Task SelectFile()
+    private async Task SelectFile()
     {
-        bool diaryFileSelected = false;
         try
         {
             var result = await FolderPicker.PickAsync(CancellationToken.None);
             if (result.IsSuccessful)
             {
                 Preferences.Set(PreferenceKeys.DiaryFile, $"{result.Folder.Path}\\multi-diary.txt");
-                diaryFileSelected = DiaryService.GetDiaries();
+                var diaryFileSelected = DiaryService.GetDiaries();
 
                 if (StateContainer.Error == DiaryErrorConstants.FileNotFound)
                 {
@@ -70,24 +69,25 @@
     /// </summary>
     private async Task<bool> ConfirmAsync()
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "This will create a new file to store diary information. Continue?");
-        parameters.Add("ButtonText", "Continue");
-        parameters.Add("Color", Color.Primary);
-        parameters.Add("ShowCancelButton", true);
+        var parameters = new DialogParameters
+        {
+            { "ContentText", "This will create a new file to store diary information. Continue?" },
+            { "ButtonText", "Continue" },
+            { "Color", Color.Primary },
+            { "ShowCancelButton", true }
+        };
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<SimpleDialog>("Continue", parameters, options);
+        var dialog = await DialogService.ShowAsync<SimpleDialog>("Continue", parameters, options);
         var result = await dialog.Result;
         dialog.Close();
 
-        if (!result.Canceled && (bool)result.Data)
+        if (result.Canceled || !(bool)result.Data)
         {
-            await DiaryService.CreateDiaryAsync();
-            return true;
+            return false;
         }
-
-        return false;
+        await DiaryService.CreateDiaryAsync();
+        return true;
     }
 
     /// <summary>

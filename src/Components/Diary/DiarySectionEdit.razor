@@ -77,7 +77,7 @@
     /// or sits for 2 seconds.
     /// </summary>
     /// <param name="title">Updated title text</param>
-    protected async Task OnTitleUpdatedAsync(string title)
+    private async Task OnTitleUpdatedAsync(string title)
     {
         DiarySection.Title = title;
         await DiaryService.UpdateDiaryAsync();
@@ -89,7 +89,7 @@
     /// or sits for 2 seconds.
     /// </summary>
     /// <param name="body">Updated body text</param>
-    protected async Task OnBodyUpdatedAsync(string body)
+    private async Task OnBodyUpdatedAsync(string body)
     {
         DiarySection.Body = body;
         await DiaryService.UpdateDiaryAsync();
@@ -100,14 +100,16 @@
     /// </summary>
     private async Task DeleteSection()
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to delete this section? This process cannot be undone.");
-        parameters.Add("ButtonText", "Delete");
-        parameters.Add("Color", Color.Error);
-        parameters.Add("ShowCancelButton", true);
+        var parameters = new DialogParameters
+        {
+            { "ContentText", "Do you really want to delete this section? This process cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error },
+            { "ShowCancelButton", true }
+        };
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<SimpleDialog>("Delete", parameters, options);
+        var dialog = await DialogService.ShowAsync<SimpleDialog>("Delete", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled && (bool)result.Data)

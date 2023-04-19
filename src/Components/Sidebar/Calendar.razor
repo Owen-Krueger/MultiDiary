@@ -26,14 +26,8 @@
     /// </summary>
     private DateTime? selectedDateTime
     {
-        get
-        {
-            return StateContainer.SelectedDate.ToDateTime(TimeOnly.MinValue);
-        }
-        set
-        {
-            StateContainer.SelectEntry(DateOnly.FromDateTime(value ?? DateTime.Today));
-        }
+        get => StateContainer.SelectedDate.ToDateTime(TimeOnly.MinValue);
+        set => StateContainer.SelectEntry(DateOnly.FromDateTime(value ?? DateTime.Today));
     }
 
     /// <summary>

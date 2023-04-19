@@ -27,10 +27,7 @@
 @code {
     private bool UseSystemTheme
     {
-        get
-        {
-            return Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
-        }
+        get => Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
         set
         {
             Preferences.Default.Set(PreferenceKeys.ThemeUseSystemTheme, value);
@@ -40,10 +37,7 @@
 
     private bool IsDarkMode
     {
-        get
-        {
-            return Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);
-        }
+        get => Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);
         set
         {
             Preferences.Default.Set(PreferenceKeys.ThemeIsDarkMode, value);

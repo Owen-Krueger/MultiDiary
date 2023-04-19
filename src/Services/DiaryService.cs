@@ -77,7 +77,7 @@ namespace MultiDiary.Services
             if (!entries.ContainsKey(date))
             {
                 diarySection.SectionId = 1;
-                entries[date] = new DiaryEntry() { DiarySections = new() { diarySection } };
+                entries[date] = new DiaryEntry { DiarySections = new List<DiarySection> { diarySection } };
             }
             else
             {
@@ -104,7 +104,7 @@ namespace MultiDiary.Services
                 // Bad
             }
             entries.Remove(stateContainer.SelectedDate);
-            stateContainer.SelectedSections = new();
+            stateContainer.SelectedSections = new List<DiarySection>();
             await UpdateDiariesFileAsync();
         }
 

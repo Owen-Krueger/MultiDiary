@@ -12,16 +12,18 @@
     [Parameter]
     public EventCallback OnDiaryReset { get; set; }
 
-    protected async Task ResetDiaryAsync()
+    private async Task ResetDiaryAsync()
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to reset your diary? This will delete all diary entries and preferences. This process cannot be undone.");
-        parameters.Add("ButtonText", "Reset");
-        parameters.Add("Color", Color.Error);
-        parameters.Add("ShowCancelButton", true);
+        var parameters = new DialogParameters
+        {
+            { "ContentText", "Do you really want to reset your diary? This will delete all diary entries and preferences. This process cannot be undone." },
+            { "ButtonText", "Reset" },
+            { "Color", Color.Error },
+            { "ShowCancelButton", true }
+        };
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<SimpleDialog>("Reset", parameters, options);
+        var dialog = await DialogService.ShowAsync<SimpleDialog>("Reset", parameters, options);
         var result = await dialog.Result;
         dialog.Close();
 

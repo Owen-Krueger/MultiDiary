@@ -21,6 +21,13 @@
                 <MudSelectItem Value="ExportType.Clipboard">Clipboard</MudSelectItem>
                 <MudSelectItem Value="ExportType.PDF">PDF</MudSelectItem>
             </MudSelect>
+            <MudTextField
+                Variant="Variant.Filled"
+                Label="Example Output"
+                T="string"
+                Lines="5"
+                ReadOnly="true" 
+                Value="ExampleString" />
         </div>
     </DialogContent>
     <DialogActions>
@@ -55,7 +62,7 @@
         StateContainer.OnChange += StateHasChanged;
     }
 
-    protected async Task ExportAsync()
+    private async Task ExportAsync()
     {
         string exportText = DiarySectionsToString(StateContainer.SelectedSections);
         await Clipboard.Default.SetTextAsync(exportText);
@@ -63,7 +70,7 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    private string DiarySectionsToString(List<DiarySection> sections)
+    private static string DiarySectionsToString(List<DiarySection> sections)
     {
         var stringBuilder = new StringBuilder();
         foreach (var section in sections)
@@ -73,6 +80,19 @@
         }
 
         return stringBuilder.ToString();
+    }
+
+    private string ExampleString
+    {
+        get
+        {
+            return exportSelection switch
+            {
+                ExportSelection.AllEntries => string.Empty,
+                ExportSelection.CurrentEntry => "Section 1 (Diary):\nDear Diary, I had a great day today!\nSection 2 (Groceries):\nNote to self, buy groceries.",
+                _ => string.Empty
+                };
+        }
     }
 
     void Cancel() => MudDialog.Cancel();
