@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
 using MultiDiary.Services;
+using MultiDiary.Services.WebDav;
+using WebDav;
 
 namespace MultiDiary;
 
@@ -35,6 +37,9 @@ public static class MauiProgram
         builder.Services.AddSingleton(FolderPicker.Default);
         builder.Services.AddSingleton<StateContainer>();
 		builder.Services.AddSingleton(Preferences.Default);
+		builder.Services.AddSingleton(SecureStorage.Default);
+		builder.Services.AddSingleton<IWebDavClient, WebDavClient>();
+		builder.Services.AddSingleton<IWebDavService, WebDavService>();
 		builder.Services.AddTransient<IDiaryService, DiaryService>();
 
 		return builder.Build();

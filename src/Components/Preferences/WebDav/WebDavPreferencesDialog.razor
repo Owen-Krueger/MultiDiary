@@ -1,0 +1,127 @@
+﻿@using System.Net;
+@using System.Text;
+@using global::WebDav;
+@implements IDisposable
+@inject StateContainer StateContainer
+@inject IPreferences Preferences
+@inject ISecureStorage SecureStorage
+@inject IWebDavService WebDavService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.NoteAlt" Class="mr-3" /> WebDav Sync Settings
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCheckBox
+            @bind-Checked="UseWebDav"
+            Color="Color.Primary"
+            Label="Sync via WebDAV" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Host"
+                      @bind-Value="WebDavHost"
+                      InputType="InputType.Url"
+                      Variant="Variant.Filled" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Username"
+                      @bind-Value="WebDavUsername"
+                      Variant="Variant.Filled" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Password"
+                      @bind-Value="WebDavPassword"
+                      Variant="Variant.Filled"
+                      InputType="@PasswordInputType"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@PasswordInputIcon"
+                      OnAdornmentClick="OnPasswordButtonClicked"
+                      AdornmentAriaLabel="Show Password" />
+        <MudButton
+            Color="Color.Primary"
+            OnClick="TestConnectionAsync" >
+            Test Connection
+        </MudButton>
+
+        @if (connectionSuccessful.HasValue)
+        {
+            <MudText>@GetTestResultText()</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="SubmitAsync">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private bool UseWebDav
+    {
+        get => Preferences.Get(PreferenceKeys.WebDavUseWebDav, false);
+        set => Preferences.Set(PreferenceKeys.WebDavUseWebDav, value);
+    }
+
+    private string WebDavHost { get; set; }
+    private string WebDavUsername { get; set; }
+    private string WebDavPassword { get; set; }
+
+    private bool showPassword = false;
+    private InputType PasswordInputType = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private bool? connectionSuccessful = null;
+
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        StateContainer.OnChange += StateHasChanged;
+
+        WebDavHost = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
+        WebDavUsername = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavUsername);
+        WebDavPassword = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavPassword);
+    }
+
+    private async Task SubmitAsync()
+    {
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, WebDavHost);
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, WebDavUsername);
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, WebDavPassword);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+    private void OnPasswordButtonClicked()
+    {
+        showPassword = !showPassword;
+        PasswordInputType = showPassword ? InputType.Text : InputType.Password;
+        PasswordInputIcon = showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+
+    private async Task TestConnectionAsync()
+    {
+        connectionSuccessful = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
+    }
+
+    private string GetTestResultText()
+    {
+        if (!connectionSuccessful.HasValue)
+        {
+            return string.Empty;
+        }
+
+        return connectionSuccessful.Value ? "Connection successful!" : "Connection unsuccessful...";
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+}

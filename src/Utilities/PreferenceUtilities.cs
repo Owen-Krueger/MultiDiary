@@ -19,5 +19,11 @@
             currentValue = newValue;
             return true;
         }
+
+        public static async Task<string> GetSecureValueOrDefaultAsync(this ISecureStorage secureStorage, string key)
+        {
+            var value = await secureStorage.GetAsync(key);
+            return value ?? string.Empty;
+        }
     }
 }

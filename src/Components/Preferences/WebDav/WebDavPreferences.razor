@@ -1,0 +1,26 @@
+﻿@inject IDialogService DialogService
+@inject IDiaryService DiaryService
+
+<MudText><strong>WebDav Syncing</strong></MudText>
+<MudButton Variant="Variant.Filled"
+           Color="Color.Primary"
+           OnClick="ShowWebDavDialogAsync">
+    WebDav Syncing Settings
+</MudButton>
+
+@code {
+
+    /// <summary>
+    /// Renders the dialog to edit WebDav settings.
+    /// </summary>
+    private async Task ShowWebDavDialogAsync()
+    {
+        var dialog = await DialogService.ShowAsync<WebDavPreferencesDialog>("WebDav Preferences");
+        var result = await dialog.Result;
+
+        if (!result.Canceled && (bool)result.Data)
+        {
+            await DiaryService.UpdateDiaryAsync();
+        }
+    }
+}

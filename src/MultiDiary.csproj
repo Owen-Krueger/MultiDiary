@@ -65,6 +65,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="TestableIO.System.IO.Abstractions" Version="19.2.11" />
         <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="19.2.11" />
+        <PackageReference Include="WebDav.Client" Version="2.8.0" />
     </ItemGroup>
 
 </Project>
