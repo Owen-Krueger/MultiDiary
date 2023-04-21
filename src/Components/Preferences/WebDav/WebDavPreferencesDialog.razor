@@ -41,11 +41,7 @@
             OnClick="TestConnectionAsync" >
             Test Connection
         </MudButton>
-
-        @if (connectionSuccessful.HasValue)
-        {
-            <MudText>@GetTestResultText()</MudText>
-        }
+        <MudText>@ConnectionDetails</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -67,11 +63,11 @@
     private string WebDavUsername { get; set; }
     private string WebDavPassword { get; set; }
 
-    private bool showPassword = false;
+    private bool ShowPassword = false;
     private InputType PasswordInputType = InputType.Password;
     private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-    private bool? connectionSuccessful = null;
+    private string ConnectionDetails = string.Empty;
 
     /// <summary>
     /// Subscribes to StateContainer changes.
@@ -97,24 +93,15 @@
 
     private void OnPasswordButtonClicked()
     {
-        showPassword = !showPassword;
-        PasswordInputType = showPassword ? InputType.Text : InputType.Password;
-        PasswordInputIcon = showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+        ShowPassword = !ShowPassword;
+        PasswordInputType = ShowPassword ? InputType.Text : InputType.Password;
+        PasswordInputIcon = ShowPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
     private async Task TestConnectionAsync()
     {
-        connectionSuccessful = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
-    }
-
-    private string GetTestResultText()
-    {
-        if (!connectionSuccessful.HasValue)
-        {
-            return string.Empty;
-        }
-
-        return connectionSuccessful.Value ? "Connection successful!" : "Connection unsuccessful...";
+        var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
+        ConnectionDetails = response.IsSuccessful ? "Connection successful!" : $"Connection unsuccessful. Additional details: {response.Description}";
     }
 
     /// <summary>

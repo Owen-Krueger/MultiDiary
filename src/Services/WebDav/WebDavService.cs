@@ -19,15 +19,14 @@ namespace MultiDiary.Services.WebDav
             this.stateContainer = stateContainer;
         }
 
-        public async Task<bool> TestConnectionAsync(string host = null, string username = null, string password = null)
+        public async Task<PropfindResponse> TestConnectionAsync(string host = null, string username = null, string password = null)
         {
             host ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
             var parameters = new PropfindParameters()
             {
                 Headers = await GetHeadersAsync(username, password)
             };
-            var result = await webDavClient.Propfind(host, parameters);
-            return result.IsSuccessful;
+            return await webDavClient.Propfind(host, parameters);
         }
 
         public async Task<Diaries> GetDiaryFileAsync()
