@@ -30,15 +30,31 @@ namespace MultiDiary.Services.WebDav
             return result.IsSuccessful;
         }
 
+        public async Task<Diaries> GetDiaryFileAsync()
+        {
+            var host = await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
+            var parameters = new GetFileParameters()
+            {
+                Headers = await GetHeadersAsync()
+            };
+            var result = await webDavClient.GetRawFile($"{host}/multi-diary.txt", parameters);
+            var streamReader = new StreamReader(result.Stream);
+            return JsonConvert.DeserializeObject<Diaries>(streamReader.ReadToEnd());
+        }
+
         public async Task UpdateDiaryFileAsync()
         {
             var host = await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
             var content = JsonConvert.SerializeObject(stateContainer.Diaries);
             using var stream = GenerateStreamFromString(content);
-            var result = await webDavClient.PutFile($"{host}/multi-diary.txt", stream);
+            var parameters = new PutFileParameters()
+            {
+                Headers = await GetHeadersAsync()
+            };
+            var result = await webDavClient.PutFile($"{host}/multi-diary.txt", stream, parameters);
         }
 
-        private async Task<IReadOnlyCollection<KeyValuePair<string, string>>> GetHeadersAsync(string username, string password)
+        private async Task<IReadOnlyCollection<KeyValuePair<string, string>>> GetHeadersAsync(string username = null, string password = null)
         {
             username ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavUsername);
             password ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavPassword);

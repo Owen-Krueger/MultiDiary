@@ -1,5 +1,6 @@
 ﻿using MudBlazor;
 using MultiDiary.Models;
+using MultiDiary.Services.WebDav;
 using Newtonsoft.Json;
 
 namespace MultiDiary.Services
@@ -11,14 +12,16 @@ namespace MultiDiary.Services
         private readonly IPreferences preferences;
         private readonly System.IO.Abstractions.IFileSystem fileSystem;
         private readonly ISnackbar snackbar;
+        private readonly IWebDavService webDavService;
 
         /// <summary> Constructor. </summary>
-        public DiaryService(StateContainer stateContainer, IPreferences preferences, System.IO.Abstractions.IFileSystem fileSystem, ISnackbar snackbar)
+        public DiaryService(StateContainer stateContainer, IPreferences preferences, System.IO.Abstractions.IFileSystem fileSystem, ISnackbar snackbar, IWebDavService webDavService)
         {
             this.stateContainer = stateContainer;
             this.preferences = preferences;
             this.fileSystem = fileSystem;
             this.snackbar = snackbar;
+            this.webDavService = webDavService;
         }
 
         /// <inheritdoc />
@@ -146,6 +149,11 @@ namespace MultiDiary.Services
             diaries.Metadata.LastUpdated = DateTime.Now;
 
             await fileSystem.File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
+
+            if (preferences.Get(PreferenceKeys.WebDavUseWebDav, false))
+            {
+                await webDavService.UpdateDiaryFileAsync();
+            }
             stateContainer.Diaries = diaries; // To force the UI to refresh.
             snackbar.Add("Changes saved", Severity.Success);
         }
