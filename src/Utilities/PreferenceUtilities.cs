@@ -20,10 +20,13 @@
             return true;
         }
 
+        /// <summary>
+        /// Gets the value from Secure Storage or an empty string if
+        /// the key is not found.
+        /// </summary>
         public static async Task<string> GetSecureValueOrDefaultAsync(this ISecureStorage secureStorage, string key)
         {
-            var value = await secureStorage.GetAsync(key);
-            return value ?? string.Empty;
+            return await secureStorage.GetAsync(key) ?? string.Empty;
         }
     }
 }

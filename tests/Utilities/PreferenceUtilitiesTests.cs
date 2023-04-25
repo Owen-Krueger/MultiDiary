@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Storage;
+using Moq;
 using MultiDiary.Utilities;
 
 namespace MultiDiary.Tests.Utilities
@@ -29,20 +30,45 @@ namespace MultiDiary.Tests.Utilities
         public void GetUpdatedPreference_PreferenceUnchanged_False(object value)
         {
             var mock = new AutoMocker();
-            string
-                preferenceKey = "PreferenceKey";
+            string preferenceKey = "PreferenceKey";
             var preferencesMock = mock.GetMock<IPreferences>();
             preferencesMock.Setup(x => x.Get(preferenceKey, value, null)).Returns(value);
             var result = PreferenceUtilities.GetUpdatedPreference(preferencesMock.Object, ref value, preferenceKey);
             
             Assert.That(result, Is.False);
         }
-
         private static IEnumerable<object> PreferenceUnchanged_TestCases()
         {
             yield return "Current Value";
             yield return true;
             yield return 13;
+        }
+
+        [Test]
+        public async Task GetSecureValueOrDefaultAsync_KeyFound_ValueReturned()
+        {
+            var mock = new AutoMocker();
+            string
+                preferenceKey = "PreferenceKey",
+                value = "PreferenceValue";
+            var secureStorageMock = mock.GetMock<ISecureStorage>();
+            secureStorageMock.Setup(x => x.GetAsync(preferenceKey)).ReturnsAsync(value);
+            var result = await PreferenceUtilities.GetSecureValueOrDefaultAsync(secureStorageMock.Object, preferenceKey);
+
+            Assert.That(result, Is.EqualTo(value));
+        }
+
+        [Test]
+        public async Task GetSecureValueOrDefaultAsync_KeyNotFound_EmptyStringReturned()
+        {
+            var mock = new AutoMocker();
+            string preferenceKey = "PreferenceKey";
+            string? value = null;
+            var secureStorageMock = mock.GetMock<ISecureStorage>();
+            secureStorageMock.Setup(x => x.GetAsync(preferenceKey)).ReturnsAsync(value);
+            var result = await PreferenceUtilities.GetSecureValueOrDefaultAsync(secureStorageMock.Object, preferenceKey);
+
+            Assert.That(result, Is.EqualTo(string.Empty));
         }
     }
 }

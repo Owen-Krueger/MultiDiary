@@ -7,6 +7,7 @@ using WebDav;
 
 namespace MultiDiary.Services.WebDav
 {
+    /// <inheritdoc />
     public class WebDavService : IWebDavService
     {
         private readonly IWebDavClient webDavClient;
@@ -14,6 +15,7 @@ namespace MultiDiary.Services.WebDav
         private readonly StateContainer stateContainer;
         private readonly ISnackbar snackbar;
 
+        /// <summary> Constructor. /// </summary>
         public WebDavService(IWebDavClient webDavClient, ISecureStorage secureStorage, StateContainer stateContainer, ISnackbar snackbar)
         {
             this.webDavClient = webDavClient;
@@ -22,6 +24,7 @@ namespace MultiDiary.Services.WebDav
             this.snackbar = snackbar;
         }
 
+        /// <inheritdoc />
         public async Task<PropfindResponse> TestConnectionAsync(string host = null, string username = null, string password = null)
         {
             host ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
@@ -32,6 +35,7 @@ namespace MultiDiary.Services.WebDav
             return await webDavClient.Propfind(host, parameters);
         }
 
+        /// <inheritdoc />
         public async Task<Diaries> GetDiaryFileAsync()
         {
             var host = await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
@@ -49,6 +53,7 @@ namespace MultiDiary.Services.WebDav
             return JsonConvert.DeserializeObject<Diaries>(streamReader.ReadToEnd());
         }
 
+        /// <inheritdoc />
         public async Task UpdateDiaryFileAsync()
         {
             var host = await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
@@ -65,6 +70,12 @@ namespace MultiDiary.Services.WebDav
             }
         }
 
+        /// <summary>
+        /// Sets authorization on header from either parameters or secure storage.
+        /// </summary>
+        /// <param name="username">Username to use in header, if provided.</param>
+        /// <param name="password">Password to use in header, if provided.</param>
+        /// <returns>Header to apply to request.</returns>
         private async Task<IReadOnlyCollection<KeyValuePair<string, string>>> GetHeadersAsync(string username = null, string password = null)
         {
             username ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavUsername);
@@ -76,6 +87,9 @@ namespace MultiDiary.Services.WebDav
             };
         }
 
+        /// <summary>
+        /// Generate a stream from an input string.
+        /// </summary>
         private static Stream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();
