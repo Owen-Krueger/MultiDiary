@@ -1,4 +1,5 @@
-﻿using MultiDiary.Models;
+﻿using MudBlazor;
+using MultiDiary.Models;
 using MultiDiary.Utilities;
 using Newtonsoft.Json;
 using System.Text;
@@ -11,12 +12,14 @@ namespace MultiDiary.Services.WebDav
         private readonly IWebDavClient webDavClient;
         private readonly ISecureStorage secureStorage;
         private readonly StateContainer stateContainer;
+        private readonly ISnackbar snackbar;
 
-        public WebDavService(IWebDavClient webDavClient, ISecureStorage secureStorage, StateContainer stateContainer)
+        public WebDavService(IWebDavClient webDavClient, ISecureStorage secureStorage, StateContainer stateContainer, ISnackbar snackbar)
         {
             this.webDavClient = webDavClient;
             this.secureStorage = secureStorage;
             this.stateContainer = stateContainer;
+            this.snackbar = snackbar;
         }
 
         public async Task<PropfindResponse> TestConnectionAsync(string host = null, string username = null, string password = null)
@@ -37,6 +40,11 @@ namespace MultiDiary.Services.WebDav
                 Headers = await GetHeadersAsync()
             };
             var result = await webDavClient.GetRawFile($"{host}/multi-diary.txt", parameters);
+            if (!result.IsSuccessful)
+            {
+                snackbar.Add("Failed to get diaries from WebDav. Please check your settings.", Severity.Error);
+                return null;
+            }
             var streamReader = new StreamReader(result.Stream);
             return JsonConvert.DeserializeObject<Diaries>(streamReader.ReadToEnd());
         }
@@ -51,6 +59,10 @@ namespace MultiDiary.Services.WebDav
                 Headers = await GetHeadersAsync()
             };
             var result = await webDavClient.PutFile($"{host}/multi-diary.txt", stream, parameters);
+            if (!result.IsSuccessful)
+            {
+                snackbar.Add("Failed to update diaries in WebDav. Please check your settings.", Severity.Error);
+            }
         }
 
         private async Task<IReadOnlyCollection<KeyValuePair<string, string>>> GetHeadersAsync(string username = null, string password = null)

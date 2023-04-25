@@ -168,19 +168,24 @@ namespace MultiDiary.Services
         private async Task<Diaries> SyncDiaryWithWebDavAsync(Diaries diaries)
         {
             var webDavDiaries = await webDavService.GetDiaryFileAsync();
-
             if (webDavDiaries == null) return diaries;
 
+            bool localEntryUpdated = false;
             foreach (var webDavEntries in webDavDiaries.Entries)
             {
                 bool localEntryExists = diaries.Entries.ContainsKey(webDavEntries.Key);
                 if (!localEntryExists || diaries.Entries[webDavEntries.Key].LastUpdated < webDavEntries.Value.LastUpdated)
                 {
                     diaries.Entries[webDavEntries.Key] = webDavEntries.Value;
+                    localEntryUpdated = true;
                 }
             }
 
-            snackbar.Add("Synced with WebDav", Severity.Success);
+            if (localEntryUpdated)
+            {
+                snackbar.Add("Synced with WebDav", Severity.Success);
+            }
+
             return diaries;
         }
     }

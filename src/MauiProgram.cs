@@ -39,7 +39,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton(Preferences.Default);
 		builder.Services.AddSingleton(SecureStorage.Default);
 		builder.Services.AddSingleton<IWebDavClient, WebDavClient>();
-		builder.Services.AddSingleton<IWebDavService, WebDavService>();
+		builder.Services.AddTransient<IWebDavService, WebDavService>();
 		builder.Services.AddTransient<IDiaryService, DiaryService>();
 
 		return builder.Build();
