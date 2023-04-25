@@ -45,7 +45,7 @@
             if (result.IsSuccessful)
             {
                 Preferences.Set(PreferenceKeys.DiaryFile, $"{result.Folder.Path}\\multi-diary.txt");
-                var diaryFileSelected = DiaryService.GetDiaries();
+                var diaryFileSelected = await DiaryService.GetDiariesAsync();
 
                 if (StateContainer.Error == DiaryErrorConstants.FileNotFound)
                 {

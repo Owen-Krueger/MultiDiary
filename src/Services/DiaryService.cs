@@ -25,7 +25,7 @@ namespace MultiDiary.Services
         }
 
         /// <inheritdoc />
-        public bool GetDiaries()
+        public async Task<bool> GetDiariesAsync()
         {
             try
             {
@@ -36,7 +36,13 @@ namespace MultiDiary.Services
                     stateContainer.Error = DiaryErrorConstants.FileNotFound;
                     return false;
                 }
-                stateContainer.Diaries = JsonConvert.DeserializeObject<Diaries>(fileSystem.File.ReadAllText(filePath));
+                var diaries = JsonConvert.DeserializeObject<Diaries>(fileSystem.File.ReadAllText(filePath));
+                if (preferences.Get(PreferenceKeys.WebDavUseWebDav, false))
+                {
+                    diaries = await SyncDiaryWithWebDavAsync(diaries);
+                }
+
+                stateContainer.Diaries = diaries;
                 stateContainer.SelectEntry(DateOnly.FromDateTime(DateTime.Today));
                 stateContainer.Error = DiaryErrorConstants.None;
                 stateContainer.FirstTime = false;
@@ -54,7 +60,7 @@ namespace MultiDiary.Services
         {
             stateContainer.Diaries = new Diaries();
             await UpdateDiariesFileAsync();
-            GetDiaries();
+            await GetDiariesAsync();
         }
 
         /// <inheritdoc />
@@ -80,21 +86,22 @@ namespace MultiDiary.Services
             if (!entries.ContainsKey(date))
             {
                 diarySection.SectionId = 1;
-                entries[date] = new DiaryEntry { DiarySections = new List<DiarySection> { diarySection } };
+                entries[date] = new DiaryEntry(diarySection);
             }
             else
             {
-                var sections = entries[date].DiarySections;
-                var sectionIndex = sections.FindIndex(x => x.SectionId == diarySection.SectionId);
+                var entry = entries[date];
+                var sectionIndex = entry.DiarySections.FindIndex(x => x.SectionId == diarySection.SectionId);
                 if (sectionIndex == -1)
                 {
-                    diarySection.SectionId = sections.Max(x => x.SectionId) + 1;
-                    sections.Add(diarySection);
+                    diarySection.SectionId = entry.DiarySections.Max(x => x.SectionId) + 1;
+                    entry.DiarySections.Add(diarySection);
                 }
                 else
                 {
-                    sections[sectionIndex] = diarySection;
+                    entry.DiarySections[sectionIndex] = diarySection;
                 }
+                entry.LastUpdated = DateTime.Now;
             }
         }
 
@@ -156,6 +163,25 @@ namespace MultiDiary.Services
             }
             stateContainer.Diaries = diaries; // To force the UI to refresh.
             snackbar.Add("Changes saved", Severity.Success);
+        }
+
+        private async Task<Diaries> SyncDiaryWithWebDavAsync(Diaries diaries)
+        {
+            var webDavDiaries = await webDavService.GetDiaryFileAsync();
+
+            if (webDavDiaries == null) return diaries;
+
+            foreach (var webDavEntries in webDavDiaries.Entries)
+            {
+                bool localEntryExists = diaries.Entries.ContainsKey(webDavEntries.Key);
+                if (!localEntryExists || diaries.Entries[webDavEntries.Key].LastUpdated < webDavEntries.Value.LastUpdated)
+                {
+                    diaries.Entries[webDavEntries.Key] = webDavEntries.Value;
+                }
+            }
+
+            snackbar.Add("Synced with WebDav", Severity.Success);
+            return diaries;
         }
     }
 }

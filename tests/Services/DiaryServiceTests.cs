@@ -10,14 +10,14 @@ namespace MultiDiary.Tests.Services
     public class DiaryServiceTests
     {
         [Test]
-        public void GetDiaries_NoDiaryFilePreference_FileNotFoundError()
+        public async Task GetDiaries_NoDiaryFilePreference_FileNotFoundError()
         {
             var mock = new AutoMocker();
             var stateContainer = new StateContainer();
             mock.Use(stateContainer);
             mock.GetMock<IPreferences>().Setup(x => x.Get(PreferenceKeys.DiaryFile, string.Empty, null)).Returns(string.Empty);
             var diaryService = mock.CreateInstance<DiaryService>();
-            var result = diaryService.GetDiaries();
+            var result = await diaryService.GetDiariesAsync();
 
             Assert.Multiple(() =>
             {
@@ -27,7 +27,7 @@ namespace MultiDiary.Tests.Services
         }
 
         [Test]
-        public void GetDiaries_FileNotFound_FileNotFoundError()
+        public async Task GetDiaries_FileNotFound_FileNotFoundError()
         {
             var mock = new AutoMocker();
             var stateContainer = new StateContainer();
@@ -38,7 +38,7 @@ namespace MultiDiary.Tests.Services
             fileMock.Setup(x => x.Exists(filePath)).Returns(false);
             mock.GetMock<System.IO.Abstractions.IFileSystem>().SetupGet(x => x.File).Returns(fileMock.Object);
             var diaryService = mock.CreateInstance<DiaryService>();
-            var result = diaryService.GetDiaries();
+            var result = await diaryService.GetDiariesAsync();
 
             Assert.Multiple(() =>
             {
@@ -48,14 +48,14 @@ namespace MultiDiary.Tests.Services
         }
 
         [Test]
-        public void GetDiaries_ExceptionThrown_FailedToOpenFile()
+        public async Task GetDiaries_ExceptionThrown_FailedToOpenFile()
         {
             var mock = new AutoMocker();
             var stateContainer = new StateContainer();
             mock.Use(stateContainer);
             mock.GetMock<IPreferences>().Setup(x => x.Get(PreferenceKeys.DiaryFile, string.Empty, null)).Throws(new Exception());
             var diaryService = mock.CreateInstance<DiaryService>();
-            var result = diaryService.GetDiaries();
+            var result = await diaryService.GetDiariesAsync();
 
             Assert.Multiple(() =>
             {
@@ -65,7 +65,7 @@ namespace MultiDiary.Tests.Services
         }
 
         [Test]
-        public void GetDiaries_DiaryPulledFromFile_DiariesSet()
+        public async Task GetDiaries_DiaryPulledFromFile_DiariesSet()
         {
             var mock = new AutoMocker();
             var stateContainer = new StateContainer();
@@ -99,7 +99,7 @@ namespace MultiDiary.Tests.Services
             fileMock.Setup(x => x.ReadAllText(filePath)).Returns(JsonConvert.SerializeObject(diaries));
             mock.GetMock<System.IO.Abstractions.IFileSystem>().SetupGet(x => x.File).Returns(fileMock.Object);
             var diaryService = mock.CreateInstance<DiaryService>();
-            var result = diaryService.GetDiaries();
+            var result = await diaryService.GetDiariesAsync();
 
             var expectedSection = diaries.Entries[today].DiarySections[0];
             var actualSection = stateContainer.Diaries.Entries[today].DiarySections[0];

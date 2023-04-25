@@ -16,7 +16,7 @@
         /// use.
         /// </summary>
         /// <returns>True if the file was found.</returns>
-        bool GetDiaries();
+        Task<bool> GetDiariesAsync();
 
         /// <summary>
         /// Removes the diary entity currently selected in

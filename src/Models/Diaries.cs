@@ -32,6 +32,15 @@
 
     public class DiaryEntry
     {
+        public DiaryEntry() { }
+
+        public DiaryEntry(DiarySection section)
+        {
+            DiarySections = new List<DiarySection>() { section };
+        }
+
+        public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
+
         public List<DiarySection> DiarySections { get; set; } = new();
 
     }

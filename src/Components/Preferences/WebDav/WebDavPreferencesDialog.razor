@@ -6,6 +6,7 @@
 @inject IPreferences Preferences
 @inject ISecureStorage SecureStorage
 @inject IWebDavService WebDavService
+@inject IDiaryService DiaryService
 
 <MudDialog>
     <TitleContent>
@@ -83,9 +84,12 @@
 
     private async Task SubmitAsync()
     {
+        if (!(await TestConnectionAsync())) return;
+
         await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, WebDavHost);
         await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, WebDavUsername);
         await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, WebDavPassword);
+        await DiaryService.GetDiariesAsync();
         MudDialog.Close(DialogResult.Ok(true));
     }
 
@@ -98,10 +102,11 @@
         PasswordInputIcon = ShowPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
-    private async Task TestConnectionAsync()
+    private async Task<bool> TestConnectionAsync()
     {
         var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
         ConnectionDetails = response.IsSuccessful ? "Connection successful!" : $"Connection unsuccessful. Additional details: {response.Description}";
+        return response.IsSuccessful;
     }
 
     /// <summary>
