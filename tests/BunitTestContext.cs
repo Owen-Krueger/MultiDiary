@@ -1,11 +1,17 @@
 ﻿using Bunit;
 namespace MultiDiary.Tests;
 
-public abstract class BunitTestContext : TestContextWrapper
+public abstract class BunitTestContext
 {
+    protected Bunit.TestContext Context { get; private set; }
+
     [SetUp]
-    public void Setup() => TestContext = new Bunit.TestContext();
+    public virtual void Setup()
+    {
+        Context = new();
+        Context.AddTestServices();
+    }
 
     [TearDown]
-    public void TearDown() => TestContext?.Dispose();
+    public void TearDown() => Context?.Dispose();
 }
