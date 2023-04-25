@@ -83,7 +83,7 @@ namespace MultiDiary.Services
         private void UpsertSection(DateOnly date, DiarySection diarySection)
         {
             var entries = stateContainer.Diaries.Entries;
-            if (!entries.ContainsKey(date))
+            if (!entries.ContainsKey(date) || !entries[date].DiarySections.Any())
             {
                 diarySection.SectionId = 1;
                 entries[date] = new DiaryEntry(diarySection);
