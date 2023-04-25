@@ -35,8 +35,12 @@
         {
             return;
         }
-        SetSectionsFromDefault();
-        StateHasChanged();
+
+        if (!StateContainer.Diaries.Entries.ContainsKey(StateContainer.SelectedDate))
+        {
+            SetSectionsFromDefault();
+            StateHasChanged();
+        }
     }
 
     /// <summary>
