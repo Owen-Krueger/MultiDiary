@@ -33,7 +33,7 @@ jobs:
         run: dotnet workload install maui --ignore-failed-sources
 
       - name: Restore Dependencies
-        run: dotnet restore src/Multdiary.csproj
+        run: dotnet restore src/Multidiary.csproj
 
       - name: Unit Tests
         run: dotnet test
