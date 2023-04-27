@@ -1,7 +1,10 @@
 <div align="center">
   <img src="src/Resources/Images/appicon.png" height="120">
   <h1>Multi Diary</h1>
-  <strong>Simple but Powerful Journal App</strong>
+  <a href="https://github.com/Owen-Krueger/MultiDiary/actions/workflows/md-build.yml"><img src="https://github.com/Owen-Krueger/MultiDiary/actions/workflows/md-build.yml/badge.svg" /></a>
+  <br />
+  <br />
+  <p>Multi Diary is a simple but powerful journal app for Windows that allows you to have the flexibility to create daily journals in the way that works best for you.</p>
   <img src="src/Resources/Images/appscreenshot.png" width="100%" alt="Screenshot">
 </div>
 
