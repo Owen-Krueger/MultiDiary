@@ -25,6 +25,9 @@
 </MudGrid>
 
 @code {
+    /// <summary>
+    /// Whether or not to use theme set by system.
+    /// </summary>
     private bool UseSystemTheme
     {
         get => Preferences.Default.Get(PreferenceKeys.ThemeUseSystemTheme, true);
@@ -35,6 +38,9 @@
         }
     }
 
+    /// <summary>
+    /// Whether or not to use dark mode theme.
+    /// </summary>
     private bool IsDarkMode
     {
         get => Preferences.Default.Get(PreferenceKeys.ThemeIsDarkMode, true);

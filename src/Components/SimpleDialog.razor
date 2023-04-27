@@ -12,16 +12,38 @@
 </MudDialog>
 
 @code {
+    /// <summary>
+    /// Needed to use MudBlazor dialogs.
+    /// </summary>
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    /// <summary>
+    /// Text to display in dialog.
+    /// </summary>
     [Parameter] public string ContentText { get; set; }
 
+    /// <summary>
+    /// Text to display on submit button.
+    /// </summary>
     [Parameter] public string ButtonText { get; set; }
 
+    /// <summary>
+    /// Color of submit button.
+    /// </summary>
     [Parameter] public Color Color { get; set; }
 
+    /// <summary>
+    /// Whether or not to let user cancel dialog.
+    /// </summary>
     [Parameter] public bool ShowCancelButton { get; set; } = false;
 
+    /// <summary>
+    /// Dialog closed as complete.
+    /// </summary>
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    /// <summary>
+    /// Dialog closed as incomplete.
+    /// </summary>
     void Cancel() => MudDialog.Cancel();
 }

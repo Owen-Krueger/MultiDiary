@@ -17,10 +17,6 @@
                 <MudSelectItem Value="ExportSelection.CurrentEntry">Current Entry</MudSelectItem>
                 <MudSelectItem Value="ExportSelection.AllEntries">All Entries</MudSelectItem>
             </MudSelect>
-            <MudSelect T="ExportType" Label="Type">
-                <MudSelectItem Value="ExportType.Clipboard">Clipboard</MudSelectItem>
-                <MudSelectItem Value="ExportType.PDF">PDF</MudSelectItem>
-            </MudSelect>
             <MudTextField
                 Variant="Variant.Filled"
                 Label="Example Output"
@@ -40,7 +36,6 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     private ExportSelection exportSelection;
-    private ExportType exportType;
 
     private enum ExportSelection
     {
@@ -48,11 +43,11 @@
         AllEntries
     }
 
-    private enum ExportType
-    {
-        Clipboard,
-        PDF
-    }
+    //private enum ExportType
+    //{
+    //    Clipboard,
+    //    PDF
+    //}
 
     /// <summary>
     /// Subscribes to StateContainer changes.
