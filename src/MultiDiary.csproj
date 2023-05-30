@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0;net7.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks>net7.0;net7.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
         <OutputType Condition="'$(TargetFramework)' != 'net7.0'">Exe</OutputType>
         <RootNamespace>MultiDiary</RootNamespace>
@@ -18,53 +18,12 @@
         <ApplicationIdGuid>B7351D83-7C9C-47AE-90C1-55E1A08792DD</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>0.9</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-        <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-        <PackageCertificateThumbprint>72835B1D42EFD3EEB33DF8FBEEF8BFA0A495D1F4</PackageCertificateThumbprint>
-        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
-      <ApplicationId>com.owenkrueger.multidiary</ApplicationId>
-      <ApplicationTitle>Multi Diary</ApplicationTitle>
     </PropertyGroup>
 
     <ItemGroup>
@@ -82,14 +41,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
-        <PackageReference Include="Majorsoft.Blazor.Components.Debounce" Version="1.5.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="MudBlazor" Version="6.2.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions" Version="19.2.11" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="19.2.11" />
-        <PackageReference Include="WebDav.Client" Version="2.8.0" />
+      <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+      <PackageReference Include="Majorsoft.Blazor.Components.Debounce" Version="1.5.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+      <PackageReference Include="MudBlazor" Version="6.3.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="TestableIO.System.IO.Abstractions" Version="19.2.29" />
+      <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="19.2.29" />
+      <PackageReference Include="WebDav.Client" Version="2.8.0" />
     </ItemGroup>
 
 </Project>
