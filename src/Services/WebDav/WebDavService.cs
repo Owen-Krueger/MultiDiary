@@ -2,6 +2,7 @@
 using MultiDiary.Models;
 using MultiDiary.Utilities;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text;
 using WebDav;
 
@@ -28,6 +29,12 @@ namespace MultiDiary.Services.WebDav
         public async Task<PropfindResponse> TestConnectionAsync(string host = null, string username = null, string password = null)
         {
             host ??= await secureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
+            
+            if (string.IsNullOrWhiteSpace(host) || !Uri.TryCreate(host, UriKind.Absolute, out _))
+            {
+                return new PropfindResponse((int)HttpStatusCode.BadRequest, "Host not valid.");
+            }
+
             var parameters = new PropfindParameters()
             {
                 Headers = await GetHeadersAsync(username, password)

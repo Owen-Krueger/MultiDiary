@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Runtime.InteropServices;
 @implements IDisposable
 @inject StateContainer StateContainer
 @inject IDiaryService DiaryService
@@ -37,7 +38,14 @@
         string error = StateContainer.Error;
         if (StateContainer.FirstTime && error == DiaryErrorConstants.FileNotFound)
         {
-            await ShowGettingStartedDialogAsync();
+            if (!OperatingSystem.IsAndroid())
+            {
+                await ShowGettingStartedDialogAsync();
+            }
+            else
+            {
+                await SetupDiaryForAndroidAsync();
+            }
         }
         else if (error != DiaryErrorConstants.FileNotFound && error != DiaryErrorConstants.None)
         {
@@ -61,6 +69,15 @@
         var dialog = await DialogService.ShowAsync<GettingStartedDialog>("Welcome!", options);
         await dialog.Result;
         gettingStartedOpen = false;
+    }
+
+    /// <summary>
+    /// Uses shared storage to set up diary on the android device.
+    /// </summary>
+    private async Task SetupDiaryForAndroidAsync()
+    {
+        Preferences.Set(PreferenceKeys.DiaryFile, $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal)}\\multi-diary.txt");
+        await DiaryService.CreateDiaryAsync();
     }
 
     /// <summary>
