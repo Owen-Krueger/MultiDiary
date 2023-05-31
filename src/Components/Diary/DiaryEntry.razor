@@ -15,6 +15,10 @@
             }
         </MudExpansionPanels>
     </MudStack>
+    @if (OperatingSystem.IsAndroid())
+    {
+        <ModifyEntryButtons />
+    }
 </div>
 
 @code {

@@ -4,23 +4,7 @@
 @inject StateContainer StateContainer
 
 <Calendar Dates="StateContainer.Diaries.Entries.Keys" />
-<MudButton Variant="Variant.Filled"
-            OnClick="AddSectionAsync"
-            EndIcon="@Icons.Material.Filled.Add"
-            Color="Color.Primary"
-            Disabled="StateContainer.Error != DiaryErrorConstants.None"
-            Class="ma-2"
-            accesskey="N">
-    Add Section
-</MudButton>
-<MudButton Variant="Variant.Filled"
-            OnClick="DeleteEntry"
-            EndIcon="@Icons.Material.Filled.Delete"
-            Color="Color.Error"
-            Disabled="StateContainer.Error != DiaryErrorConstants.None"
-            Class="ma-2">
-    Remove Entry
-</MudButton>
+<ModifyEntryButtons />
 <div class="settings">
     <MudFab StartIcon="@Icons.Material.Filled.Settings"
             Label="Settings"
@@ -38,46 +22,12 @@
     }
 
     /// <summary>
-    /// Adds a new section to the UI to be edited by the user.
-    /// The section will be given an ID of 1 if it's the first
-    /// section, or whatever the largest ID is plus 1.
-    /// </summary>
-    private async Task AddSectionAsync()
-    {
-        StateContainer.SelectedSections.Add(new DiarySection());
-        await DiaryService.UpdateDiaryAsync();
-    }
-
-    /// <summary>
     /// Opens the preferences dialog.
     /// </summary>
     private void OpenPreferences()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
         DialogService.Show<PreferencesDialog>("Preferences", options);
-    }
-
-    /// <summary>
-    /// Confirm the section should be deleted and delete if desired.
-    /// </summary>
-    private async Task DeleteEntry()
-    {
-        var parameters = new DialogParameters
-        {
-            { "ContentText", "Do you really want to delete this entry? This process cannot be undone." },
-            { "ButtonText", "Delete" },
-            { "Color", Color.Error },
-            { "ShowCancelButton", true }
-        };
-
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = await DialogService.ShowAsync<SimpleDialog>("Delete", parameters, options);
-        var result = await dialog.Result;
-
-        if (!result.Canceled && (bool)result.Data)
-        {
-            await DiaryService.RemoveSelectedEntryAsync();
-        }
     }
 
     /// <summary>
