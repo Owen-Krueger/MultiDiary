@@ -14,11 +14,11 @@
                 <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" ReadOnlyTitle="IsTitleReadOnly(section.Title)" />
             }
         </MudExpansionPanels>
+        @if (OperatingSystem.IsAndroid())
+        {
+            <ModifyEntryButtons />
+        }
     </MudStack>
-    @if (OperatingSystem.IsAndroid())
-    {
-        <ModifyEntryButtons />
-    }
 </div>
 
 @code {
