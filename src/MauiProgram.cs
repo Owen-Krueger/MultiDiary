@@ -38,7 +38,12 @@ public static class MauiProgram
         builder.Services.AddSingleton<StateContainer>();
         builder.Services.AddSingleton(Preferences.Default);
         builder.Services.AddSingleton(SecureStorage.Default);
-        builder.Services.AddSingleton<IWebDavClient, WebDavClient>();
+
+        // Due to limitations with Xamarin Android, HttpClients can't use WebDav's extended HttpMethods. By
+        // providing a SocketsHttpHandler, we sidestep around Android's default HttpClient and can use
+        // these additional methods.
+        var webDavHttpClient = new HttpClient(new SocketsHttpHandler(), true);
+        builder.Services.AddSingleton<IWebDavClient>(new WebDavClient(webDavHttpClient));
         builder.Services.AddTransient<IWebDavService, WebDavService>();
         builder.Services.AddTransient<IDiaryService, DiaryService>();
 
