@@ -7,57 +7,31 @@ namespace MultiDiary.Services
     /// </summary>
     public class StateContainer
     {
-        private bool firstTime = true;
-
-        public bool FirstTime
-        {
-            get => firstTime;
-            set => UpdateProperty(ref firstTime, value);
-        }
-
-        private string error = DiaryErrorConstants.None;
+        /// <summary>
+        /// If this is the user's first time using the application.
+        /// </summary>
+        public bool FirstTime { get => firstTime; set => UpdateProperty(ref firstTime, value); }
 
         /// <summary>
         /// Error text if an error was encountered.
         /// </summary>
-        public string Error
-        {
-            get => error;
-            set => UpdateProperty(ref error, value);
-        }
-
-        private Diaries diaries = new();
+        public string Error { get => error; set => UpdateProperty(ref error, value); }
 
         /// <summary>
         /// The diaries from file.
         /// </summary>
-        public Diaries Diaries
-        {
-            get => diaries;
-            set => UpdateProperty(ref diaries, value);
-        }
-
-        private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+        public Diaries Diaries { get => diaries; set => UpdateProperty(ref diaries, value); }
 
         /// <summary>
         /// The date currently selected in the UI.
         /// </summary>
-        public DateOnly SelectedDate
-        {
-            get => selectedDate;
-            set => UpdateProperty(ref selectedDate, value);
-        }
+        public DateOnly SelectedDate { get => selectedDate; set => UpdateProperty(ref selectedDate, value); }
 
-        private List<DiarySection> selectedSections = new();
 
         /// <summary>
         /// The sections currently selected in the UI.
         /// </summary>
-        public List<DiarySection> SelectedSections
-        {
-            get => selectedSections;
-            set => UpdateProperty(ref selectedSections, value);
-        }
+        public List<DiarySection> SelectedSections { get => selectedSections; set => UpdateProperty(ref selectedSections, value); }
 
         /// <summary>
         /// Sets the selected date and selected sections.
@@ -114,17 +88,19 @@ namespace MultiDiary.Services
         public event Action OnChange;
 
         /// <summary>
-        /// Updates the inputted property and notifies consumers of the update.
+        /// Updates the inputted property and notifies consumers of the update,
+        /// so they can re-render UI elements.
         /// </summary>
         private void UpdateProperty<TProperty>(ref TProperty property, TProperty value)
         {
             property = value;
-            NotifyStateChanged();
+            OnChange?.Invoke();
         }
 
-        /// <summary>
-        /// Triggers the OnChange event to notify consumers they should re-render UI elements.
-        /// </summary>
-        private void NotifyStateChanged() => OnChange?.Invoke();
+        private bool firstTime = true;
+        private string error = DiaryErrorConstants.None;
+        private Diaries diaries = new();
+        private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+        private List<DiarySection> selectedSections = new();
     }
 }
