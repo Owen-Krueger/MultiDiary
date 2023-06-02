@@ -12,11 +12,7 @@ namespace MultiDiary.Services
         public bool FirstTime
         {
             get => firstTime;
-            set
-            {
-                firstTime = value;
-                NotifyStateChanged();
-            }
+            set => UpdateProperty(ref firstTime, value);
         }
 
         private string error = DiaryErrorConstants.None;
@@ -27,11 +23,7 @@ namespace MultiDiary.Services
         public string Error
         {
             get => error;
-            set
-            {
-                error = value;
-                NotifyStateChanged();
-            }
+            set => UpdateProperty(ref error, value);
         }
 
         private Diaries diaries = new();
@@ -42,11 +34,7 @@ namespace MultiDiary.Services
         public Diaries Diaries
         {
             get => diaries;
-            set
-            {
-                diaries = value;
-                NotifyStateChanged();
-            }
+            set => UpdateProperty(ref diaries, value);
         }
 
         private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
@@ -57,11 +45,7 @@ namespace MultiDiary.Services
         public DateOnly SelectedDate
         {
             get => selectedDate;
-            set
-            {
-                selectedDate = value;
-                NotifyStateChanged();
-            }
+            set => UpdateProperty(ref selectedDate, value);
         }
 
         private List<DiarySection> selectedSections = new();
@@ -72,11 +56,7 @@ namespace MultiDiary.Services
         public List<DiarySection> SelectedSections
         {
             get => selectedSections;
-            set
-            {
-                selectedSections = value;
-                NotifyStateChanged();
-            }
+            set => UpdateProperty(ref selectedSections, value);
         }
 
         /// <summary>
@@ -132,6 +112,15 @@ namespace MultiDiary.Services
         /// Notifies consumers that the state has changed and UI elements should be re-rendered.
         /// </summary>
         public event Action OnChange;
+
+        /// <summary>
+        /// Updates the inputted property and notifies consumers of the update.
+        /// </summary>
+        private void UpdateProperty<TProperty>(ref TProperty property, TProperty value)
+        {
+            property = value;
+            NotifyStateChanged();
+        }
 
         /// <summary>
         /// Triggers the OnChange event to notify consumers they should re-render UI elements.
