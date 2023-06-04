@@ -7,7 +7,20 @@
 @inject IPreferences Preferences
 
 <MudThemeProvider @ref="mudThemeProvider" IsDarkMode="isDarkMode" />
-<DiaryEntry />
+<div class="d-flex flex-column pa-4" style="height:94vh; overflow-x:auto;">
+    @if (StateContainer.SelectedPage == SelectedPage.Home)
+    {
+        <DiaryEntry />
+    }
+    else if (StateContainer.SelectedPage == SelectedPage.Settings)
+    {
+        <PreferencesPage />
+    }
+    else if (StateContainer.SelectedPage == SelectedPage.Export)
+    {
+    
+    }
+</div>
 
 @code {
     private bool gettingStartedOpen = false;

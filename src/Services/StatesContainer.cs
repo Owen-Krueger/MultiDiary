@@ -7,6 +7,8 @@ namespace MultiDiary.Services
     /// </summary>
     public class StateContainer
     {
+        public SelectedPage SelectedPage { get => selectedPage; set => UpdateProperty(ref selectedPage, value); }
+
         /// <summary>
         /// If this is the user's first time using the application.
         /// </summary>
@@ -39,7 +41,7 @@ namespace MultiDiary.Services
         /// don't update the main diary sections by being copied by reference
         /// until the user requests the diary be updated.
         /// </summary>
-        public void SelectEntry(DateOnly date)
+        public void SelectEntry(DateOnly date, bool navigateHome = false)
         {
             SelectedDate = date;
             SelectedSections.Clear();
@@ -48,6 +50,11 @@ namespace MultiDiary.Services
             {
                 SelectedSections.Add((DiarySection)section.Clone());
             });
+
+            if (navigateHome && SelectedPage != SelectedPage.Home)
+            {
+                SelectedPage = SelectedPage.Home;
+            }
         }
 
         /// <summary>
@@ -65,6 +72,14 @@ namespace MultiDiary.Services
             {
                 var sectionToRemove = value.DiarySections.SingleOrDefault(x => x.SectionId == sectionId);
                 value.DiarySections.Remove(sectionToRemove);
+            }
+        }
+
+        public void NavigateHome()
+        {
+            if (SelectedPage != SelectedPage.Home)
+            {
+                SelectedPage = SelectedPage.Home;
             }
         }
 
@@ -97,6 +112,7 @@ namespace MultiDiary.Services
             OnChange?.Invoke();
         }
 
+        private SelectedPage selectedPage = SelectedPage.Home;
         private bool firstTime = true;
         private string error = DiaryErrorConstants.None;
         private Diaries diaries = new();

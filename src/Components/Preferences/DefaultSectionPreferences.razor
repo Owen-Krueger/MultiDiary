@@ -1,28 +1,100 @@
-﻿@inject IDialogService DialogService
-@inject IDiaryService DiaryService
+﻿@inject IDiaryService DiaryService
+@inject StateContainer StateContainer
+@inject ISnackbar Snackbar
 
 <MudText><strong>Default Sections</strong></MudText>
-<MudButton
-    Variant="Variant.Filled"
-    Color="Color.Primary" 
-    OnClick="ShowDefaultSectionDialogAsync"
->
-    Set Default Sections
-</MudButton>
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Default Section Settings">
+        <MudCheckBox Color="Color.Primary"
+        @bind-Checked="ReadOnlyDefaultSectionTitles"
+                     Label="Set Default Section Titles to be Read-only" />
+        @foreach (var section in StateContainer.Diaries.DefaultSections)
+        {
+            <div class="d-flex pa-2">
+                <MudTextField Label="Section"
+                              Variant="Variant.Filled"
+                @bind-Value="section.DefaultTitle"
+                @ref="TextFieldRef" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               aria-label="delete"
+                               OnClick="() => DeleteSection(section)"
+                               tabindex="-1" />
+            </div>
+        }
+        <MudButton Variant="Variant.Filled"
+                   OnClick="AddSection"
+                   EndIcon="@Icons.Material.Filled.Add"
+                   Color="Color.Primary"
+                   Class="ma-2"
+                   accesskey="N">
+            Add Section
+        </MudButton>
+        <MudButton Color="Color.Primary"
+                   OnClick="SaveChangesAsync"
+                   Class="ma-2">
+            Save
+        </MudButton>
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
 @code {
 
-    /// <summary>
-    /// Renders the dialog to edit default sections.
-    /// </summary>
-    private async Task ShowDefaultSectionDialogAsync()
-    {
-        var dialog = await DialogService.ShowAsync<DefaultSectionPreferencesDialog>("Default Sections");
-        var result = await dialog.Result;
+    private List<MudTextField<string>> textFieldRefs = new();
+    public MudTextField<string> TextFieldRef { set => textFieldRefs.Add(value); }
 
-        if (!result.Canceled && (bool)result.Data)
+    private bool sectionAdded = false;
+
+    private bool ReadOnlyDefaultSectionTitles
+    {
+        get => Preferences.Default.Get(PreferenceKeys.ReadOnlyDefaultSectionTitles, false);
+        set => Preferences.Default.Set(PreferenceKeys.ReadOnlyDefaultSectionTitles, value);
+    }
+
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    /// <summary>
+    /// If a section was added before the UI refreshed, focus the keyboard
+    /// on the newly created section.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (sectionAdded)
         {
-            await DiaryService.UpdateDiaryAsync();
+            await textFieldRefs.Last().FocusAsync();
+            sectionAdded = false;
         }
+    }
+
+    /// <summary>
+    /// Add a new section text field to edit.
+    /// </summary>
+    protected void AddSection()
+    {
+        StateContainer.Diaries.DefaultSections.Add(new DefaultSection());
+        sectionAdded = true;
+    }
+
+    /// <summary>
+    /// Delete the selected text field.
+    /// </summary>
+    protected void DeleteSection(DefaultSection defaultSection)
+    {
+        StateContainer.Diaries.DefaultSections.Remove(defaultSection);
+    }
+
+    protected async Task SaveChangesAsync() => await DiaryService.UpdateDiaryAsync();
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

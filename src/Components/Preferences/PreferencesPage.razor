@@ -1,0 +1,17 @@
+﻿@inject StateContainer StateContainer
+
+<div class="d-flex flex-column gap-4 preferences-container">
+    @if (!OperatingSystem.IsAndroid())
+    {
+        <FilePreferences OnDiarySelected="Submit" />
+    }
+    <WebDavPreferences />
+    <SectionPreferences />
+    <DefaultSectionPreferences />
+    <ThemePreferences />
+    <ResetDiaryPreferences OnDiaryReset="Submit" />
+</div>
+
+@code {
+    private void Submit() => StateContainer.SelectedPage = SelectedPage.Home;
+}

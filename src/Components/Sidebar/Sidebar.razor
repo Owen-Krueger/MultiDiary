@@ -1,16 +1,8 @@
 ﻿@implements IDisposable
-@inject IDiaryService DiaryService
-@inject IDialogService DialogService
 @inject StateContainer StateContainer
 
 <Calendar Dates="StateContainer.Diaries.Entries.Keys" />
 <ModifyEntryButtons />
-<div class="settings">
-    <MudFab StartIcon="@Icons.Material.Filled.Settings"
-            Label="Settings"
-            OnClick="OpenPreferences"
-            tabindex="-1" />
-</div>
 
 @code {
     /// <summary>
@@ -19,15 +11,6 @@
     protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
-    }
-
-    /// <summary>
-    /// Opens the preferences dialog.
-    /// </summary>
-    private void OpenPreferences()
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
-        DialogService.Show<PreferencesDialog>("Preferences", options);
     }
 
     /// <summary>

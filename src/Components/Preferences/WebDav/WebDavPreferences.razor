@@ -1,26 +1,103 @@
-﻿@inject IDialogService DialogService
-@inject IDiaryService DiaryService
+﻿@inject IDiaryService DiaryService
+@inject StateContainer StateContainer
+@inject IPreferences Preferences
+@inject ISecureStorage SecureStorage
+@inject IWebDavService WebDavService
+@inject ISnackbar Snackbar
+@implements IDisposable
 
 <MudText><strong>WebDav Syncing</strong></MudText>
-<MudButton Variant="Variant.Filled"
-           Color="Color.Primary"
-           OnClick="ShowWebDavDialogAsync">
-    WebDav Syncing Settings
-</MudButton>
+<MudExpansionPanels>
+    <MudExpansionPanel Text="WebDav Syncing Settings">
+        <MudCheckBox @bind-Checked="UseWebDav"
+                     Color="Color.Primary"
+                     Label="Sync via WebDAV" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Host"
+        @bind-Value="WebDavHost"
+                      InputType="InputType.Url"
+                      Variant="Variant.Filled" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Username"
+        @bind-Value="WebDavUsername"
+                      Variant="Variant.Filled" />
+        <MudTextField Disabled="@(!UseWebDav)"
+                      Label="Password"
+        @bind-Value="WebDavPassword"
+                      Variant="Variant.Filled"
+                      InputType="@PasswordInputType"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@PasswordInputIcon"
+                      OnAdornmentClick="OnPasswordButtonClicked"
+                      AdornmentAriaLabel="Show Password" />
+        <MudButton Color="Color.Primary"
+                   OnClick="EnableConnectionAsync"
+                   Class="ma-2">
+            Save
+        </MudButton>
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
 @code {
 
-    /// <summary>
-    /// Renders the dialog to edit WebDav settings.
-    /// </summary>
-    private async Task ShowWebDavDialogAsync()
+    private bool UseWebDav
     {
-        var dialog = await DialogService.ShowAsync<WebDavPreferencesDialog>("WebDav Preferences");
-        var result = await dialog.Result;
+        get => Preferences.Get(PreferenceKeys.WebDavUseWebDav, false);
+        set => Preferences.Set(PreferenceKeys.WebDavUseWebDav, value);
+    }
 
-        if (!result.Canceled && (bool)result.Data)
-        {
-            await DiaryService.UpdateDiaryAsync();
-        }
+    private string WebDavHost { get; set; }
+    private string WebDavUsername { get; set; }
+    private string WebDavPassword { get; set; }
+
+    private bool ShowPassword = false;
+    private InputType PasswordInputType = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        StateContainer.OnChange += StateHasChanged;
+
+        WebDavHost = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavHost);
+        WebDavUsername = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavUsername);
+        WebDavPassword = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavPassword);
+    }
+
+    private void OnPasswordButtonClicked()
+    {
+        ShowPassword = !ShowPassword;
+        PasswordInputType = ShowPassword ? InputType.Text : InputType.Password;
+        PasswordInputIcon = ShowPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+
+    private async Task EnableConnectionAsync()
+    {
+        var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
+        ProduceResultSnackBar(response.IsSuccessful, response.Description);
+
+        if (!response.IsSuccessful) return;
+
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, WebDavHost);
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, WebDavUsername);
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, WebDavPassword);
+        await DiaryService.GetDiariesAsync();
+    }
+
+    private void ProduceResultSnackBar(bool isSuccess, string description)
+    {
+        string message = isSuccess ? "Changes saved" : $"Connection to WebDav unsuccessful. Additional details: {description}";
+        Severity severity = isSuccess ? Severity.Success : Severity.Error;
+        Snackbar.Add(message, severity);
+    }
+
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }
