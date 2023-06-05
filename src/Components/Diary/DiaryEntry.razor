@@ -22,10 +22,12 @@
 @code {
     /// <summary>
     /// Subscribes to StateContainer changes.
+    /// Re-gets diary information from file in case settings have changed.
     /// </summary>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         StateContainer.OnChange += StateHasChanged;
+        await DiaryService.GetDiariesAsync();
     }
 
     /// <summary>

@@ -142,7 +142,7 @@ namespace MultiDiary.Services
         /// <summary>
         /// Updates the diary file with any new changes.
         /// </summary>
-        private async Task UpdateDiariesFileAsync()
+        private async Task UpdateDiariesFileAsync(bool syncWebDav = true)
         {
             var filePath = preferences.Get(PreferenceKeys.DiaryFile, string.Empty);
             if (string.IsNullOrEmpty(filePath))
@@ -157,7 +157,7 @@ namespace MultiDiary.Services
 
             await fileSystem.File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(diaries));
 
-            if (preferences.Get(PreferenceKeys.WebDavUseWebDav, false))
+            if (syncWebDav && preferences.Get(PreferenceKeys.WebDavUseWebDav, false))
             {
                 await webDavService.UpdateDiaryFileAsync();
             }
@@ -183,6 +183,7 @@ namespace MultiDiary.Services
 
             if (localEntryUpdated)
             {
+                await UpdateDiariesFileAsync(false); // To not unnecessarily sync changes to WebDav that we just got from them.
                 snackbar.Add("Synced with WebDav", Severity.Success);
             }
 

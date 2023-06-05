@@ -75,20 +75,13 @@ namespace MultiDiary.Services
             }
         }
 
-        public void NavigateHome()
-        {
-            if (SelectedPage != SelectedPage.Home)
-            {
-                SelectedPage = SelectedPage.Home;
-            }
-        }
-
         /// <summary>
         /// Resets the state of the app to factory settings.
         /// </summary>
         public void ResetState()
         {
             Diaries = new Diaries();
+            SelectedPage = SelectedPage.Home;
             SelectedDate = DateOnly.FromDateTime(DateTime.Today);
             SelectedSections = new List<DiarySection>();
             Error = DiaryErrorConstants.FileNotFound;

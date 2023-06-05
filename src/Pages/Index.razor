@@ -29,12 +29,10 @@
 
     /// <summary>
     /// Subscribes to StateContainer changes.
-    /// Gets diaries from file.
     /// </summary>
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         StateContainer.OnChange += StateHasChanged;
-        await DiaryService.GetDiariesAsync();
     }
 
     /// <summary>

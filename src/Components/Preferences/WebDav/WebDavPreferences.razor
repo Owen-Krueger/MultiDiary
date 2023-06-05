@@ -14,27 +14,34 @@
                      Label="Sync via WebDAV" />
         <MudTextField Disabled="@(!UseWebDav)"
                       Label="Host"
-        @bind-Value="WebDavHost"
+                      Value="WebDavHost"
                       InputType="InputType.Url"
-                      Variant="Variant.Filled" />
+                      Variant="Variant.Filled"
+                      T="string"
+                      ValueChanged="e => SetWebDavHost(e)" />
         <MudTextField Disabled="@(!UseWebDav)"
                       Label="Username"
-        @bind-Value="WebDavUsername"
-                      Variant="Variant.Filled" />
+                      Value="WebDavUsername"
+                      Variant="Variant.Filled"
+                      T="string"
+                      ValueChanged="e => SetWebDavUsername(e)" />
         <MudTextField Disabled="@(!UseWebDav)"
                       Label="Password"
-        @bind-Value="WebDavPassword"
+                      Value="WebDavPassword"
                       Variant="Variant.Filled"
                       InputType="@PasswordInputType"
                       Adornment="Adornment.End"
                       AdornmentIcon="@PasswordInputIcon"
                       OnAdornmentClick="OnPasswordButtonClicked"
-                      AdornmentAriaLabel="Show Password" />
+                      AdornmentAriaLabel="Show Password"
+                      T="string"
+                      ValueChanged="e => SetWebDavPassword(e)" />
         <MudButton Color="Color.Primary"
-                   OnClick="EnableConnectionAsync"
+                   OnClick="TestConnectionAsync"
                    Class="ma-2">
-            Save
+            Test Connection
         </MudButton>
+        <MudText>@connectionDetails</MudText>
     </MudExpansionPanel>
 </MudExpansionPanels>
 
@@ -53,6 +60,7 @@
     private bool ShowPassword = false;
     private InputType PasswordInputType = InputType.Password;
     private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private string connectionDetails = string.Empty;
 
     /// <summary>
     /// Subscribes to StateContainer changes.
@@ -73,24 +81,28 @@
         PasswordInputIcon = ShowPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
-    private async Task EnableConnectionAsync()
+    private async Task SetWebDavHost(string value)
     {
-        var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
-        ProduceResultSnackBar(response.IsSuccessful, response.Description);
-
-        if (!response.IsSuccessful) return;
-
-        await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, WebDavHost);
-        await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, WebDavUsername);
-        await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, WebDavPassword);
-        await DiaryService.GetDiariesAsync();
+        WebDavHost = value;
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, value);
     }
 
-    private void ProduceResultSnackBar(bool isSuccess, string description)
+    private async Task SetWebDavUsername(string value)
     {
-        string message = isSuccess ? "Changes saved" : $"Connection to WebDav unsuccessful. Additional details: {description}";
-        Severity severity = isSuccess ? Severity.Success : Severity.Error;
-        Snackbar.Add(message, severity);
+        WebDavUsername = value;
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, value);
+    }
+
+    private async Task SetWebDavPassword(string value)
+    {
+        WebDavPassword = value;
+        await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, value);
+    }
+
+    private async Task TestConnectionAsync()
+    {
+        var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);
+        connectionDetails = response.IsSuccessful ? "Connection successful!" : $"Connection to WebDav unsuccessful. Additional details: {response.Description}";
     }
 
     /// <summary>
