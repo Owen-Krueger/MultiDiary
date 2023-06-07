@@ -43,6 +43,7 @@ namespace MultiDiary.Services
         /// </summary>
         public void SelectEntry(DateOnly date, bool navigateHome = false)
         {
+            var previousDate = SelectedDate;
             SelectedDate = date;
             SelectedSections.Clear();
             var sections = Diaries.Entries.SingleOrDefault(x => x.Key == date).Value?.DiarySections ?? new List<DiarySection>();
@@ -51,7 +52,10 @@ namespace MultiDiary.Services
                 SelectedSections.Add((DiarySection)section.Clone());
             });
 
-            if (navigateHome && SelectedPage != SelectedPage.Home)
+            // Making sure the date has changed is needed due to a problem where, when we select a date for exporting,
+            // both the date picker on the export page and the calendar in the sidebar execute their set events. The
+            // second event from the sidebar will try to navigate the app back to the Homepage, which we don't want.
+            if (navigateHome && previousDate != date && SelectedPage != SelectedPage.Home)
             {
                 SelectedPage = SelectedPage.Home;
             }
