@@ -46,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IWebDavClient>(new WebDavClient(webDavHttpClient));
         builder.Services.AddTransient<IWebDavService, WebDavService>();
         builder.Services.AddTransient<IDiaryService, DiaryService>();
+        builder.Services.AddTransient<IExportService, ExportService>();
 
         return builder.Build();
     }

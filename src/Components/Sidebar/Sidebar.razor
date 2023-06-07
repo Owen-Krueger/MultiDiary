@@ -1,7 +1,7 @@
 ﻿@implements IDisposable
 @inject StateContainer StateContainer
 
-<Calendar Dates="StateContainer.Diaries.Entries.Keys" />
+<DiaryCalendar PickerVariant="PickerVariant.Static" NavigateHomeOnDateSelect="true" />
 <ModifyEntryButtons />
 
 @code {

@@ -2,15 +2,18 @@
 @inject StateContainer StateContainer
 
 <MudDatePicker
-    PickerVariant="PickerVariant.Static"
+    PickerVariant="@PickerVariant"
     AdditionalDateClassesFunc="CheckDate"
-    @bind-Date="selectedDateTime"
+    @bind-Date="SelectedDateTime"
 />
 
 @code {
     [Parameter]
-    public IEnumerable<DateOnly> Dates { get; set; }
-
+    public PickerVariant PickerVariant { get; set; }
+    
+    [Parameter]
+    public bool NavigateHomeOnDateSelect { get; set; }
+    
     /// <summary>
     /// Subscribes to StateContainer changes.
     /// </summary>
@@ -24,10 +27,10 @@
     /// This is needed because the calendar UI exposes a DateTime type, when we
     /// only store a DateOnly type in the state.
     /// </summary>
-    private DateTime? selectedDateTime
+    private DateTime? SelectedDateTime
     {
         get => StateContainer.SelectedDate.ToDateTime(TimeOnly.MinValue);
-        set => StateContainer.SelectEntry(DateOnly.FromDateTime(value ?? DateTime.Today), true);
+        set => StateContainer.SelectEntry(DateOnly.FromDateTime(value ?? DateTime.Today), NavigateHomeOnDateSelect);
     }
 
     /// <summary>
@@ -37,7 +40,7 @@
     /// <returns>CSS style to add to element.</returns>
     private string CheckDate(DateTime date)
     {
-        return Dates.Contains(DateOnly.FromDateTime(date)) ? "mud-button-outlined" : string.Empty;
+        return StateContainer.Diaries.Entries.Keys.Contains(DateOnly.FromDateTime(date)) ? "mud-button-outlined" : string.Empty;
     }
 
     /// <summary>

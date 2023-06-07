@@ -1,0 +1,67 @@
+﻿@implements IDisposable
+@inject IExportService ExportService
+@inject ISnackbar Snackbar
+@inject StateContainer StateContainer
+
+<div class="d-flex flex-column gap-4 center-page">
+    <MudSelect T="ExportSelection"
+               @bind-Value="exportSelection"
+               Label="Selection">
+        @foreach (var selection in Enum.GetValues<ExportSelection>())
+        {
+            <MudSelectItem Value="@selection">@GetSelectOptionText(selection)</MudSelectItem>
+        }
+        @if (exportSelection == ExportSelection.SingleEntry)
+        {
+            <DiaryCalendar PickerVariant="PickerVariant.Inline" NavigateHomeOnDateSelect="false" />
+        }
+    </MudSelect>
+    <MudButton 
+        Color="Color.Primary"
+        Variant="Variant.Filled"
+        OnClick="ExportAsync"
+        Class="ma-2">Copy to Clipboard</MudButton>
+    <MudButton 
+            Color="Color.Primary"
+            Variant="Variant.Filled"
+            OnClick="ExportAsync"
+            Class="ma-2">Export to File</MudButton>
+</div>
+
+@code {
+    private ExportSelection exportSelection;
+    
+    /// <summary>
+    /// Subscribes to StateContainer changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+
+    private async Task ExportAsync()
+    {
+        string exportText = ExportService.GetExportString(exportSelection);
+        await Clipboard.Default.SetTextAsync(exportText);
+        Snackbar.Add("Entry exported", Severity.Success);
+    }
+
+    private string GetSelectOptionText(ExportSelection selection)
+    {
+        return selection switch
+        {
+            ExportSelection.DiaryFile => "Diary File",
+            ExportSelection.AllEntries => "All Entries",
+            ExportSelection.SingleEntry => "Single Entry",
+            _ => string.Empty
+        };
+    }
+    
+    /// <summary>
+    /// Unsubscribes from StateContainer changes.
+    /// </summary>
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+}
