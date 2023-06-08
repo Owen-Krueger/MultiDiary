@@ -2,22 +2,22 @@
 using MultiDiary.Models;
 using Newtonsoft.Json;
 
-namespace MultiDiary.Services;
+namespace MultiDiary.Services.Export;
 
-public interface IExportService
-{
-    string GetExportString(ExportSelection exportSelection);
-}
-
+/// <inheritdoc />
 public class ExportService : IExportService
 {
     private readonly StateContainer stateContainer;
 
+    /// <summary>
+    /// Constructor.
+    /// </summary>
     public ExportService(StateContainer stateContainer)
     {
         this.stateContainer = stateContainer;
     }
     
+    /// <inheritdoc />
     public string GetExportString(ExportSelection exportSelection)
     {
         return exportSelection switch
@@ -28,11 +28,17 @@ public class ExportService : IExportService
         };
     }
 
+    /// <summary>
+    /// Gets the entirety of the diary contents as a JSON string.
+    /// </summary>
     private string GetDiaryFileString()
     {
         return JsonConvert.SerializeObject(stateContainer.Diaries);
     }
     
+    /// <summary>
+    /// Get the currently selected sections as a formatted string.
+    /// </summary>
     private string GetDiarySelectedSectionsString()
     {
         var stringBuilder = new StringBuilder();

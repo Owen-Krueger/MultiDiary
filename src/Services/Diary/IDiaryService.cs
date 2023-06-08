@@ -1,4 +1,4 @@
-﻿namespace MultiDiary.Services
+﻿namespace MultiDiary.Services.Diary
 {
     /// <summary>
     /// For interacting with the diary state and file.
@@ -23,6 +23,10 @@
         /// the state.
         /// </summary>
         Task RemoveSelectedEntryAsync();
+        
+        /// <summary>
+        /// Clears all diary contents and preferences.
+        /// </summary>
         void ResetDiary();
 
         /// <summary>

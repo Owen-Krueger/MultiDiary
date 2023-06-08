@@ -4,8 +4,9 @@ using MultiDiary.Models;
 using MultiDiary.Services;
 using Newtonsoft.Json;
 using System.IO.Abstractions;
+using MultiDiary.Services.Diary;
 
-namespace MultiDiary.Tests.Services
+namespace MultiDiary.Tests.Services.Diary
 {
     public class DiaryServiceTests
     {
@@ -72,27 +73,7 @@ namespace MultiDiary.Tests.Services
             mock.Use(stateContainer);
             string filePath = "path/to/file";
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-            var diaries = new Diaries()
-            {
-                Entries = new Dictionary<DateOnly, DiaryEntry>()
-                {
-                    {
-                        today,
-                        new DiaryEntry()
-                        {
-                            DiarySections = new()
-                            {
-                                new()
-                                {
-                                    SectionId = 1,
-                                    Title = "Foo",
-                                    Body = "Bar",
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            var diaries = UnitTestUtilities.SetupDiaries();
             mock.GetMock<IPreferences>().Setup(x => x.Get(PreferenceKeys.DiaryFile, string.Empty, null)).Returns(filePath);
             var fileMock = mock.GetMock<IFile>();
             fileMock.Setup(x => x.Exists(filePath)).Returns(true);

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
 using MultiDiary.Services;
+using MultiDiary.Services.Diary;
+using MultiDiary.Services.Export;
 using MultiDiary.Services.WebDav;
 using WebDav;
 

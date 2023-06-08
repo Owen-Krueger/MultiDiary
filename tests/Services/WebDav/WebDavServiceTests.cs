@@ -5,7 +5,7 @@ using MultiDiary.Services.WebDav;
 using System.Net;
 using WebDav;
 
-namespace MultiDiary.Tests.Services
+namespace MultiDiary.Tests.Services.WebDav
 {
     public class WebDavServiceTests
     {

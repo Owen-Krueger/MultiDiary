@@ -10,11 +10,10 @@ namespace MultiDiary.Tests.Utilities
         public void GetUpdatedPreference_PreferenceChanged_True(object currentValue, object newValue)
         {
             var mock = new AutoMocker();
-            string
-                preferenceKey = "PreferenceKey";
+            const string preferenceKey = "PreferenceKey";
             var preferencesMock = mock.GetMock<IPreferences>();
             preferencesMock.Setup(x => x.Get(preferenceKey, currentValue, null)).Returns(newValue);
-            var result = PreferenceUtilities.GetUpdatedPreference(preferencesMock.Object, ref currentValue, preferenceKey);
+            var result = preferencesMock.Object.GetUpdatedPreference(ref currentValue, preferenceKey);
 
             Assert.That(result, Is.True);
         }
@@ -30,10 +29,10 @@ namespace MultiDiary.Tests.Utilities
         public void GetUpdatedPreference_PreferenceUnchanged_False(object value)
         {
             var mock = new AutoMocker();
-            string preferenceKey = "PreferenceKey";
+            const string preferenceKey = "PreferenceKey";
             var preferencesMock = mock.GetMock<IPreferences>();
             preferencesMock.Setup(x => x.Get(preferenceKey, value, null)).Returns(value);
-            var result = PreferenceUtilities.GetUpdatedPreference(preferencesMock.Object, ref value, preferenceKey);
+            var result = preferencesMock.Object.GetUpdatedPreference(ref value, preferenceKey);
             
             Assert.That(result, Is.False);
         }
@@ -48,12 +47,11 @@ namespace MultiDiary.Tests.Utilities
         public async Task GetSecureValueOrDefaultAsync_KeyFound_ValueReturned()
         {
             var mock = new AutoMocker();
-            string
-                preferenceKey = "PreferenceKey",
-                value = "PreferenceValue";
+            const string preferenceKey = "PreferenceKey";
+            const string value = "PreferenceValue";
             var secureStorageMock = mock.GetMock<ISecureStorage>();
             secureStorageMock.Setup(x => x.GetAsync(preferenceKey)).ReturnsAsync(value);
-            var result = await PreferenceUtilities.GetSecureValueOrDefaultAsync(secureStorageMock.Object, preferenceKey);
+            var result = await secureStorageMock.Object.GetSecureValueOrDefaultAsync(preferenceKey);
 
             Assert.That(result, Is.EqualTo(value));
         }
@@ -62,11 +60,11 @@ namespace MultiDiary.Tests.Utilities
         public async Task GetSecureValueOrDefaultAsync_KeyNotFound_EmptyStringReturned()
         {
             var mock = new AutoMocker();
-            string preferenceKey = "PreferenceKey";
+            const string preferenceKey = "PreferenceKey";
             string? value = null;
             var secureStorageMock = mock.GetMock<ISecureStorage>();
-            secureStorageMock.Setup(x => x.GetAsync(preferenceKey)).ReturnsAsync(value);
-            var result = await PreferenceUtilities.GetSecureValueOrDefaultAsync(secureStorageMock.Object, preferenceKey);
+            secureStorageMock.Setup(x => x.GetAsync(preferenceKey))!.ReturnsAsync(value);
+            var result = await secureStorageMock.Object.GetSecureValueOrDefaultAsync(preferenceKey);
 
             Assert.That(result, Is.EqualTo(string.Empty));
         }

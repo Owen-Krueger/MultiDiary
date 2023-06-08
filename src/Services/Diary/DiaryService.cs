@@ -3,7 +3,7 @@ using MultiDiary.Models;
 using MultiDiary.Services.WebDav;
 using Newtonsoft.Json;
 
-namespace MultiDiary.Services
+namespace MultiDiary.Services.Diary
 {
     /// <inheritdoc />
     public class DiaryService : IDiaryService
@@ -119,6 +119,7 @@ namespace MultiDiary.Services
             await UpdateDiariesFileAsync();
         }
 
+        /// <inheritdoc />
         public void ResetDiary()
         {
             try
