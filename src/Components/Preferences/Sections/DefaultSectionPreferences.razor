@@ -89,6 +89,9 @@
         StateContainer.Diaries.DefaultSections.Remove(defaultSection);
     }
 
+    /// <summary>
+    /// Updates the diary with the default sections set.
+    /// </summary>
     private async Task SaveChangesAsync() => await DiaryService.UpdateDiaryAsync();
 
     /// <summary>

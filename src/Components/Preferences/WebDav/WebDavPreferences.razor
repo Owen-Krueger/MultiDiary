@@ -74,6 +74,9 @@
         WebDavPassword = await SecureStorage.GetSecureValueOrDefaultAsync(PreferenceKeys.WebDavPassword);
     }
 
+    /// <summary>
+    /// Toggles the visibility of the password textbox contents.
+    /// </summary>
     private void OnPasswordButtonClicked()
     {
         showPassword = !showPassword;
@@ -81,24 +84,37 @@
         passwordInputIcon = showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
+    /// <summary>
+    /// Sets the host for WebDav on the page and in secure storage.
+    /// </summary>
     private async Task SetWebDavHost(string value)
     {
         WebDavHost = value;
         await SecureStorage.SetAsync(PreferenceKeys.WebDavHost, value);
     }
 
+    /// <summary>
+    /// Sets the username for WebDav on the page and in secure storage.
+    /// </summary>
     private async Task SetWebDavUsername(string value)
     {
         WebDavUsername = value;
         await SecureStorage.SetAsync(PreferenceKeys.WebDavUsername, value);
     }
 
+    /// <summary>
+    /// Sets the password for WebDav on the page and in secure storage.
+    /// </summary>
     private async Task SetWebDavPassword(string value)
     {
         WebDavPassword = value;
         await SecureStorage.SetAsync(PreferenceKeys.WebDavPassword, value);
     }
 
+    /// <summary>
+    /// Tests the connection to WebDav based on the options provided by the user.
+    /// Displays the results of the test for the user.
+    /// </summary>
     private async Task TestConnectionAsync()
     {
         var response = await WebDavService.TestConnectionAsync(WebDavHost, WebDavUsername, WebDavPassword);

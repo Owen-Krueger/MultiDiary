@@ -37,6 +37,9 @@
         filePath = Preferences.Default.Get(PreferenceKeys.DiaryFile, string.Empty);
     }
 
+    /// <summary>
+    /// Selects the folder where to save and load diary contents.
+    /// </summary>
     private async Task SelectFile()
     {
         try
