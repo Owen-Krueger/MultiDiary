@@ -11,7 +11,7 @@
         {
             <MudTextField Value="DiarySection.Title"
                         Label="Title"
-                        DebounceInterval="debounceTimeMilleseconds"
+                        DebounceInterval="DebounceTimeMilliseconds"
                         T="string"
                         ValueChanged="OnTitleUpdatedAsync"
                         Lines="1" />
@@ -33,7 +33,7 @@
         <MudTextField Variant="Variant.Filled"
                       Value="DiarySection.Body"
                       Label="Body"
-                      DebounceInterval="debounceTimeMilleseconds"
+                      DebounceInterval="DebounceTimeMilliseconds"
                       T="string"
                       ValueChanged="OnBodyUpdatedAsync"
                       Lines="sectionLineCount" />
@@ -49,7 +49,7 @@
     [Parameter]
     public bool ReadOnlyTitle { get; set; }
 
-    private const int debounceTimeMilleseconds = 1000;
+    private const int DebounceTimeMilliseconds = 1000;
     private int sectionLineCount = 5;
 
     /// <summary>

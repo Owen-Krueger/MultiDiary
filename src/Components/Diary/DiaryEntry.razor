@@ -39,19 +39,19 @@ else
 
     /// <summary>
     /// Re-renders UI if dependencies have changed.
+    /// Checks if we're on a new page with defaults that should be set.
     /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
-        if (StateContainer.SelectedSections.Any() || !StateContainer.Diaries.DefaultSections.Any())
+        if (StateContainer.SelectedSections.Any() ||
+            !StateContainer.Diaries.DefaultSections.Any() ||
+            StateContainer.Diaries.Entries.ContainsKey(StateContainer.SelectedDate))
         {
             return;
         }
-
-        if (!StateContainer.Diaries.Entries.ContainsKey(StateContainer.SelectedDate))
-        {
-            SetSectionsFromDefault();
-            StateHasChanged();
-        }
+        
+        SetSectionsFromDefault();
+        StateHasChanged();
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ else
     /// </summary>
     private void SetSectionsFromDefault()
     {
-        int index = 0;
+        var index = 0;
         foreach (var section in StateContainer.Diaries.DefaultSections)
         {
             index++;

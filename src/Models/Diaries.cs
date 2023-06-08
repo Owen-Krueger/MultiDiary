@@ -12,23 +12,24 @@
             {
                 LastUpdated = DateTime.UtcNow,
             };
+            DefaultSections = new List<DefaultSection>();
             Entries = new Dictionary<DateOnly, DiaryEntry>();
         }
 
         /// <summary>
         /// Additional details on this file.
         /// </summary>
-        public DiaryMetadata Metadata { get; set; } = new();
+        public DiaryMetadata Metadata { get; set; }
 
         /// <summary>
         /// Sections to automatically be added when creating new diary entries.
         /// </summary>
-        public List<DefaultSection> DefaultSections { get; set; } = new();
+        public List<DefaultSection> DefaultSections { get; set; }
 
         /// <summary>
         /// Diary entries per day.
         /// </summary>
-        public Dictionary<DateOnly, DiaryEntry> Entries { get; set; } = new();
+        public Dictionary<DateOnly, DiaryEntry> Entries { get; set; }
     }
 
     /// <summary>
