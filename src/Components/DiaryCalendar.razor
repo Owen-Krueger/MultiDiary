@@ -5,6 +5,7 @@
     PickerVariant="@PickerVariant"
     AdditionalDateClassesFunc="CheckDate"
     @bind-Date="SelectedDateTime"
+    Disabled="@StateContainer.IsLoading"
 />
 
 @code {
@@ -40,6 +41,11 @@
     /// <returns>CSS style to add to element.</returns>
     private string CheckDate(DateTime date)
     {
+        if (StateContainer.IsLoading) // So we don't highlight days until the app has stopped loading.
+        {
+            return string.Empty;
+        }
+        
         return StateContainer.Diaries.Entries.Keys.Contains(DateOnly.FromDateTime(date)) ? "mud-button-outlined" : string.Empty;
     }
 

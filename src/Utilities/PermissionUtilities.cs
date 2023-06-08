@@ -4,7 +4,7 @@ namespace MultiDiary.Utilities
 {
     public static class PermissionUtilities
     {
-        public async static Task<bool> CheckPermissionAsync<TPermission>()
+        public static async Task<bool> CheckPermissionAsync<TPermission>()
             where TPermission : BasePermission, new()
         {
             var status = await CheckStatusAsync<TPermission>();

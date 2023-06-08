@@ -46,6 +46,7 @@ namespace MultiDiary.Services
                 stateContainer.SelectEntry(DateOnly.FromDateTime(DateTime.Today));
                 stateContainer.Error = DiaryErrorConstants.None;
                 stateContainer.FirstTime = false;
+                stateContainer.IsLoading = false;
                 return true;
             }
             catch (Exception)

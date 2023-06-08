@@ -2,22 +2,29 @@
 @inject IDiaryService DiaryService
 @inject StateContainer StateContainer
 
-<MudStack>
-    <MudExpansionPanels MultiExpansion="true">
-        @if (!StateContainer.SelectedSections.Any())
+@if (StateContainer.IsLoading)
+{
+    <Loading />
+}
+else
+{
+    <MudStack>
+        <MudExpansionPanels MultiExpansion="true">
+            @if (!StateContainer.SelectedSections.Any())
+            {
+                <MudText Align="Align.Center">No sections here yet... Click "Add Section" on the sidebar to make one!</MudText>
+            }
+            @foreach(var section in StateContainer.SelectedSections)
+            {
+                <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" ReadOnlyTitle="IsTitleReadOnly(section.Title)" />
+            }
+        </MudExpansionPanels>
+        @if (OperatingSystem.IsAndroid())
         {
-            <MudText Align="Align.Center">No sections here yet... Click "Add Section" on the sidebar to make one!</MudText>
+            <ModifyEntryButtons />
         }
-        @foreach(var section in StateContainer.SelectedSections)
-        {
-            <DiarySectionEdit Date="StateContainer.SelectedDate" DiarySection="section" ReadOnlyTitle="IsTitleReadOnly(section.Title)" />
-        }
-    </MudExpansionPanels>
-    @if (OperatingSystem.IsAndroid())
-    {
-        <ModifyEntryButtons />
-    }
-</MudStack>
+    </MudStack>
+}
 
 @code {
     /// <summary>

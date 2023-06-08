@@ -8,18 +8,20 @@
 
 <MudThemeProvider @ref="mudThemeProvider" IsDarkMode="isDarkMode" />
 <div class="d-flex flex-column pa-4" style="height:94vh; overflow-x:auto;">
-    @if (StateContainer.SelectedPage == SelectedPage.Home)
-    {
-        <DiaryEntry />
-    }
-    else if (StateContainer.SelectedPage == SelectedPage.Settings)
-    {
-        <PreferencesPage />
-    }
-    else if (StateContainer.SelectedPage == SelectedPage.Export)
-    {
-        <ExportPage />
-    }
+    @switch (StateContainer.SelectedPage)
+        {
+            case SelectedPage.Home:
+                <DiaryEntry />
+                break;
+            case SelectedPage.Settings:
+                <PreferencesPage />
+                break;
+            case SelectedPage.Export:
+                <ExportPage />
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 </div>
 
 @code {
