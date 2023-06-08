@@ -13,11 +13,9 @@
     <MudAppBar Color="Color.Primary" Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Inherit" OnClick="() => StateContainer.SelectedPage = SelectedPage.Home" />
-        <MudIconButton Icon="@Icons.Material.Filled.ImportExport" Color="Color.Inherit" OnClick="() => StateContainer.SelectedPage = SelectedPage.Export" />
-        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" OnClick="() => StateContainer.SelectedPage = SelectedPage.Settings" />
-        @*<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />*@
-        @*<AppMenu />*@
+        <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Inherit" OnClick="() => SetPage(SelectedPage.Home)" />
+        <MudIconButton Icon="@Icons.Material.Filled.ImportExport" Color="Color.Inherit" OnClick="() => SetPage(SelectedPage.Export)" />
+        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" OnClick="() => SetPage(SelectedPage.Settings)" />
     </MudAppBar>
     <MudDrawer @bind-Open="drawerOpen" Elevation="2" Width="320px">
         <Sidebar />
@@ -30,8 +28,23 @@
 @code {
     bool drawerOpen = true;
 
+    /// <summary>
+    /// Toggles the drawer open or closed, depending on how it's currently set.
+    /// </summary>
     private void DrawerToggle()
     {
         drawerOpen = !drawerOpen;
+    }
+
+    /// <summary>
+    /// Sets the selected page in state, if the app is not currently loading.
+    /// </summary>
+    /// <param name="selectedPage">Page to navigate to.</param>
+    private void SetPage(SelectedPage selectedPage)
+    {
+        if (!StateContainer.IsLoading)
+        {
+            StateContainer.SelectedPage = selectedPage;
+        }
     }
 }
