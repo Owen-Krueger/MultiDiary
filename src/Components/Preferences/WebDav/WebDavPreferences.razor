@@ -18,24 +18,24 @@
                       InputType="InputType.Url"
                       Variant="Variant.Filled"
                       T="string"
-                      ValueChanged="e => SetWebDavHost(e)" />
+                      ValueChanged="SetWebDavHost" />
         <MudTextField Disabled="@(!UseWebDav)"
                       Label="Username"
                       Value="WebDavUsername"
                       Variant="Variant.Filled"
                       T="string"
-                      ValueChanged="e => SetWebDavUsername(e)" />
+                      ValueChanged="SetWebDavUsername" />
         <MudTextField Disabled="@(!UseWebDav)"
                       Label="Password"
                       Value="WebDavPassword"
                       Variant="Variant.Filled"
-                      InputType="@PasswordInputType"
+                      InputType="@passwordInputType"
                       Adornment="Adornment.End"
-                      AdornmentIcon="@PasswordInputIcon"
+                      AdornmentIcon="@passwordInputIcon"
                       OnAdornmentClick="OnPasswordButtonClicked"
                       AdornmentAriaLabel="Show Password"
                       T="string"
-                      ValueChanged="e => SetWebDavPassword(e)" />
+                      ValueChanged="SetWebDavPassword" />
         <MudButton Color="Color.Primary"
                    OnClick="TestConnectionAsync"
                    Class="ma-2">
@@ -57,9 +57,9 @@
     private string WebDavUsername { get; set; }
     private string WebDavPassword { get; set; }
 
-    private bool ShowPassword = false;
-    private InputType PasswordInputType = InputType.Password;
-    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool showPassword = false;
+    private InputType passwordInputType = InputType.Password;
+    private string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
     private string connectionDetails = string.Empty;
 
     /// <summary>
@@ -76,9 +76,9 @@
 
     private void OnPasswordButtonClicked()
     {
-        ShowPassword = !ShowPassword;
-        PasswordInputType = ShowPassword ? InputType.Text : InputType.Password;
-        PasswordInputIcon = ShowPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+        showPassword = !showPassword;
+        passwordInputType = showPassword ? InputType.Text : InputType.Password;
+        passwordInputIcon = showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
     private async Task SetWebDavHost(string value)

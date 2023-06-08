@@ -1,4 +1,5 @@
-﻿@inject IDiaryService DiaryService
+﻿@implements IDisposable
+@inject IDiaryService DiaryService
 @inject StateContainer StateContainer
 @inject ISnackbar Snackbar
 
@@ -74,7 +75,7 @@
     /// <summary>
     /// Add a new section text field to edit.
     /// </summary>
-    protected void AddSection()
+    private void AddSection()
     {
         StateContainer.Diaries.DefaultSections.Add(new DefaultSection());
         sectionAdded = true;
@@ -83,12 +84,12 @@
     /// <summary>
     /// Delete the selected text field.
     /// </summary>
-    protected void DeleteSection(DefaultSection defaultSection)
+    private void DeleteSection(DefaultSection defaultSection)
     {
         StateContainer.Diaries.DefaultSections.Remove(defaultSection);
     }
 
-    protected async Task SaveChangesAsync() => await DiaryService.UpdateDiaryAsync();
+    private async Task SaveChangesAsync() => await DiaryService.UpdateDiaryAsync();
 
     /// <summary>
     /// Unsubscribes from StateContainer changes.

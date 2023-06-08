@@ -43,7 +43,7 @@
 
     private async Task ExportAsync()
     {
-        string exportText = ExportService.GetExportString(exportSelection);
+        var exportText = ExportService.GetExportString(exportSelection);
         await Clipboard.Default.SetTextAsync(exportText);
         Snackbar.Add("Entry exported", Severity.Success);
     }
