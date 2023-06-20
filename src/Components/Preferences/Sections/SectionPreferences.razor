@@ -1,18 +1,22 @@
 ﻿@inject StateContainer StateContainer
 
 <MudText><strong>Section Preferences</strong></MudText>
-<MudSlider @bind-Value="SectionLineCount" Min="1" Max="10" Color="Color.Primary">Section Line Count: @SectionLineCount.ToString()</MudSlider>
-<MudSlider @bind-Value="SectionSaveDelay" Min="1" Max="60" Color="Color.Primary"Disabled="UseCustomDelay">Save Delay (Seconds): @SectionSaveDelay.ToString()</MudSlider>
-<MudCheckBox Color="Color.Primary"
-             @bind-Checked="UseCustomDelay"
-             Label="Specify Custom Delay" />
-@if (UseCustomDelay)
-{
-    <MudTextField Label="Save Delay (Seconds)"
-                  T="int"
-                  @bind-Value="SectionSaveDelay"
-                  Lines="1" />
-}
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Section Preference Settings">
+        <MudSlider @bind-Value="SectionLineCount" Min="1" Max="10" Color="Color.Primary">Section Line Count: @SectionLineCount.ToString()</MudSlider>
+        <MudSlider @bind-Value="SectionSaveDelay" Min="1" Max="60" Color="Color.Primary"Disabled="UseCustomDelay">Save Delay (Seconds): @SectionSaveDelay.ToString()</MudSlider>
+        <MudCheckBox Color="Color.Primary"
+                     @bind-Checked="UseCustomDelay"
+                     Label="Specify Custom Delay" />
+        @if (UseCustomDelay)
+        {
+            <MudTextField Label="Save Delay (Seconds)"
+                          T="int"
+                          @bind-Value="SectionSaveDelay"
+                          Lines="1" />
+        }
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
 
 @code {
