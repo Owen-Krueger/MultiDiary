@@ -21,6 +21,11 @@
         public const string SectionLineCount = "SectionLineCount";
 
         /// <summary>
+        /// The seconds to wait before saving to file.
+        /// </summary>
+        public const string SectionSaveDelay = "SectionSaveDelay";
+
+        /// <summary>
         /// Whether or not to use system theme.
         /// </summary>
         public const string ThemeUseSystemTheme = "ThemeUseSystemTheme";

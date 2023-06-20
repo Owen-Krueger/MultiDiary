@@ -49,7 +49,7 @@
     [Parameter]
     public bool ReadOnlyTitle { get; set; }
 
-    private const int DebounceTimeMilliseconds = 1000;
+    private int DebounceTimeMilliseconds = 5000;
     private int sectionLineCount = 5;
 
     /// <summary>
@@ -65,7 +65,8 @@
     /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
-        if (Preferences.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount))
+        if (Preferences.GetUpdatedPreference(ref sectionLineCount, PreferenceKeys.SectionLineCount) ||
+            Preferences.GetUpdatedPreference(ref DebounceTimeMilliseconds, PreferenceKeys.SectionSaveDelay))
         {
             StateHasChanged(); // Needed so the component properly refreshes.
         }

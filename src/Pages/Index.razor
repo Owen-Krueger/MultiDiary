@@ -88,7 +88,7 @@
     /// </summary>
     private async Task SetupDiaryForAndroidAsync()
     {
-        Preferences.Set(PreferenceKeys.DiaryFile, $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal)}\\multi-diary.txt");
+        Preferences.Set(PreferenceKeys.DiaryFile, $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}\\multi-diary.txt");
         await DiaryService.CreateDiaryAsync();
     }
 

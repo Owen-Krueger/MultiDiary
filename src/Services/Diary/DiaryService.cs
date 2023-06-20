@@ -173,14 +173,10 @@ namespace MultiDiary.Services.Diary
             if (webDavDiaries == null) return diaries;
 
             bool localEntryUpdated = false;
-            foreach (var webDavEntries in webDavDiaries.Entries)
+            foreach (var webDavEntries in from webDavEntries in webDavDiaries.Entries let localEntryExists = diaries.Entries.ContainsKey(webDavEntries.Key) where !localEntryExists || diaries.Entries[webDavEntries.Key].LastUpdated < webDavEntries.Value.LastUpdated select webDavEntries)
             {
-                bool localEntryExists = diaries.Entries.ContainsKey(webDavEntries.Key);
-                if (!localEntryExists || diaries.Entries[webDavEntries.Key].LastUpdated < webDavEntries.Value.LastUpdated)
-                {
-                    diaries.Entries[webDavEntries.Key] = webDavEntries.Value;
-                    localEntryUpdated = true;
-                }
+                diaries.Entries[webDavEntries.Key] = webDavEntries.Value;
+                localEntryUpdated = true;
             }
 
             if (localEntryUpdated)
